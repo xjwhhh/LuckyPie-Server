@@ -7,9 +7,9 @@
  */
 
 class Share{
-    private $postBasicInfo;
-    private $postTime;
-    private $postAddress;
+    public $postBasicInfo;
+    public $postTime;
+    public $postAddress;
 
     /**
      * @return mixed

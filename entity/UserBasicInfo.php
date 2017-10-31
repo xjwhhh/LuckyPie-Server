@@ -8,14 +8,14 @@
 
 class UserBasicInfo
 {
-    private $id;
-    private $account;
-    private $password;
-    private $name;
-    private $identity;
-    private $gender;
-    private $telephone;
-    private $email;
+    public $id;
+    public $account;
+    public $password;
+    public $name;
+    public $identity;
+    public $gender;
+    public $telephone;
+    public $email;
 
     /**
      * @return mixed

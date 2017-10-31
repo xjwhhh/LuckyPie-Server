@@ -8,7 +8,7 @@
 
 class Album
 {
-    private $postBasicInfo;
+    public $postBasicInfo;
 
     /**
      * @return mixed

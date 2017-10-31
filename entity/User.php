@@ -9,13 +9,14 @@
 Class User
 {
 
-    private $basicInfo;
-    private $follows;
-    private $followers;
-    private $likes;
-    private $dates;
-    private $shares;
-    private $albums;
+    public $basicInfo;
+    public $follows;
+    public $followers;
+    public $likes="";
+    public $dates="";
+    public $shares="";
+    public $albums="";
+
 
     /**
      * @return mixed
@@ -129,5 +130,5 @@ Class User
         $this->albums = $albums;
     }
 
-
 }
+

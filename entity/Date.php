@@ -6,12 +6,12 @@
  * Time: 20:28
  */
 class Date{
-    private $postBasicInfo;
-    private $cost;
-    private $photoTime;
-    private $photoAddress;
-    private $postTime;
-    private $postAddress;
+    public $postBasicInfo;
+    public $cost;
+    public $photoTime;
+    public $photoAddress;
+    public $postTime;
+    public $postAddress;
 
     /**
      * @return mixed
@@ -109,5 +109,5 @@ class Date{
         $this->postAddress = $postAddress;
     }
 
-    
+
 }

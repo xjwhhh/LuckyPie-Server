@@ -8,14 +8,14 @@
 
 class PostBasicInfo
 {
-    private $id;
-    private $user_id;
-    private $desc;
-    private $imageUrls;
-    private $numOfLikes;
-    private $numOfForwards;
-    private $numOfComments;
-    private $comments;
+    public $id;
+    public $user_id;
+    public $desc;
+    public $imageUrls;
+    public $numOfLikes;
+    public $numOfForwards;
+    public $numOfComments;
+    public $comments;
 
     /**
      * @return mixed
