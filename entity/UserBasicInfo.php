@@ -6,7 +6,8 @@
  * Time: 19:30
  */
 
-class UserBasicInfo{
+class UserBasicInfo
+{
     private $id;
     private $account;
     private $password;
@@ -16,67 +17,133 @@ class UserBasicInfo{
     private $telephone;
     private $email;
 
-    public function getId(){
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId($id){
-        $this->id=$id;
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
-    public function getAccount(){
+    /**
+     * @return mixed
+     */
+    public function getAccount()
+    {
         return $this->account;
     }
 
-    public function setAccount($account){
-        $this->account=$account;
+    /**
+     * @param mixed $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
     }
 
-    public function getPassword(){
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
         return $this->password;
     }
 
-    public function setPassword($password){
-        $this->password=$password;
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 
-    public function getName(){
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function setName($name){
-        $this->name=$name;
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
-    public function getIdentity(){
+    /**
+     * @return mixed
+     */
+    public function getIdentity()
+    {
         return $this->identity;
     }
 
-    public function setIdentity($identity){
-        $this->identity=$identity;
+    /**
+     * @param mixed $identity
+     */
+    public function setIdentity($identity)
+    {
+        $this->identity = $identity;
     }
 
-    public function getGender(){
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
         return $this->gender;
     }
 
-    public function setGender($gender){
-        $this->gender=$gender;
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
     }
 
-    public function getTelephone(){
+    /**
+     * @return mixed
+     */
+    public function getTelephone()
+    {
         return $this->telephone;
     }
 
-    public function setTelephone($telephone){
-        $this->telephone=$telephone;
+    /**
+     * @param mixed $telephone
+     */
+    public function setTelephone($telephone)
+    {
+        $this->telephone = $telephone;
     }
 
-    public function getEmail(){
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function setEmail($email){
-        $this->email=$email;
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
+
+
 }
