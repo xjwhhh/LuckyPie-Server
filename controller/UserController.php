@@ -5,19 +5,18 @@
  * Date: 2017/10/31
  * Time: 20:41
  */
-
-require_once(dirname(__FILE__) . '/../entity/User.php');
-require_once(dirname(__FILE__) . '/../entity/UserBasicInfo.php');
+require_once (dirname(__FILE__) . '/../handler/UserHandler.php');
 
 
-$user = new User();
-$user->setAlbums("2345");
-$user->setShares("2345");
-$user->setLikes("2345");
-$userBasic=new UserBasicInfo();
-$userBasic->setAccount("1");
-$userBasic->setId("1");
-$user->setBasicInfo($userBasic);
+//获取http的request方法
+$method = strtolower($_SERVER['REQUEST_METHOD']);
+echo $method;
 
-echo json_encode($user);
+$userHandler=new UserHandler();
+$userHandler->getUserInfo("1");
+
+
+
+
+
 
