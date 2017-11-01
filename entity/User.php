@@ -13,16 +13,18 @@ Class User
     public $account;
     public $password;
     public $name;
+    public $authority;
+    public $introduction;
     public $identity;
     public $gender;
     public $telephone;
     public $email;
     public $follows;
     public $followers;
-    public $likes = "";
-    public $dates = "";
-    public $shares = "";
-    public $albums = "";
+    public $likes;
+    public $dates;
+    public $shares;
+    public $albums;
 
     /**
      * @return mixed
@@ -86,6 +88,38 @@ Class User
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthority()
+    {
+        return $this->authority;
+    }
+
+    /**
+     * @param mixed $authority
+     */
+    public function setAuthority($authority)
+    {
+        $this->authority = $authority;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntroduction()
+    {
+        return $this->introduction;
+    }
+
+    /**
+     * @param mixed $introduction
+     */
+    public function setIntroduction($introduction)
+    {
+        $this->introduction = $introduction;
     }
 
     /**
