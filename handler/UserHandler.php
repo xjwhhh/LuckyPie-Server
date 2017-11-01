@@ -7,24 +7,42 @@
  */
 require_once ("SimpleHandler.php");
 require_once(dirname(__FILE__) . '/../entity/User.php');
-require_once(dirname(__FILE__) . '/../entity/UserBasicInfo.php');
 
 class UserHandler extends SimpleHandler{
 
+    //post:account,password
+    public function login(){
+//        print_r($_SERVER) ;
+//       print_r( $_REQUEST);
+
+    }
+
+    //post:account,password,ensurePassword
+    public function register(){
+
+    }
+
+    //get:id
     public function getUserInfo($id){
         $user = new User();
         $user->setAlbums("2345");
         $user->setShares("2345");
         $user->setLikes("2345");
-        $userBasic=new UserBasicInfo();
-        $userBasic->setAccount("1");
-        $userBasic->setId("1");
-        $user->setBasicInfo($userBasic);
+        $user->setAccount("1");
+        $user->setId("1");
 
         echo json_encode($user);
     }
 
     public function updateUserInfo(){
+
+    }
+
+    public function getExplorePhotographer(){
+
+    }
+
+    public function getExploreModel(){
 
     }
 

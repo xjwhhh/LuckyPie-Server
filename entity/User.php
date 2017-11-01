@@ -9,29 +9,147 @@
 Class User
 {
 
-    public $basicInfo;
+    public $id;
+    public $account;
+    public $password;
+    public $name;
+    public $identity;
+    public $gender;
+    public $telephone;
+    public $email;
     public $follows;
     public $followers;
-    public $likes="";
-    public $dates="";
-    public $shares="";
-    public $albums="";
-
+    public $likes = "";
+    public $dates = "";
+    public $shares = "";
+    public $albums = "";
 
     /**
      * @return mixed
      */
-    public function getBasicInfo()
+    public function getId()
     {
-        return $this->basicInfo;
+        return $this->id;
     }
 
     /**
-     * @param mixed $basicInfo
+     * @param mixed $id
      */
-    public function setBasicInfo($basicInfo)
+    public function setId($id)
     {
-        $this->basicInfo = $basicInfo;
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @param mixed $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentity()
+    {
+        return $this->identity;
+    }
+
+    /**
+     * @param mixed $identity
+     */
+    public function setIdentity($identity)
+    {
+        $this->identity = $identity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelephone()
+    {
+        return $this->telephone;
+    }
+
+    /**
+     * @param mixed $telephone
+     */
+    public function setTelephone($telephone)
+    {
+        $this->telephone = $telephone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 
     /**
@@ -67,7 +185,7 @@ Class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLikes()
     {
@@ -75,7 +193,7 @@ Class User
     }
 
     /**
-     * @param mixed $likes
+     * @param string $likes
      */
     public function setLikes($likes)
     {
@@ -83,7 +201,7 @@ Class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDates()
     {
@@ -91,7 +209,7 @@ Class User
     }
 
     /**
-     * @param mixed $dates
+     * @param string $dates
      */
     public function setDates($dates)
     {
@@ -99,7 +217,7 @@ Class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getShares()
     {
@@ -107,7 +225,7 @@ Class User
     }
 
     /**
-     * @param mixed $shares
+     * @param string $shares
      */
     public function setShares($shares)
     {
@@ -115,7 +233,7 @@ Class User
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAlbums()
     {
@@ -123,12 +241,13 @@ Class User
     }
 
     /**
-     * @param mixed $albums
+     * @param string $albums
      */
     public function setAlbums($albums)
     {
         $this->albums = $albums;
     }
+
 
 }
 

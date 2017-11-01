@@ -6,14 +6,33 @@
  * Time: 20:41
  */
 require_once (dirname(__FILE__) . '/../handler/UserHandler.php');
+$option = "";
+if(isset($_GET["option"]))
+    $option = $_GET["option"];
+if(isset($_POST["option"]))
+    $option = $_POST["option"];
 
+switch ($option){
+    case "login":
+        $userHandler=new UserHandler();
+        $userHandler->login();
+        break;
 
-//获取http的request方法
-$method = strtolower($_SERVER['REQUEST_METHOD']);
-echo $method;
+    case "register":
+        $userHandler=new UserHandler();
+        $userHandler->register();
+        break;
 
-$userHandler=new UserHandler();
-$userHandler->getUserInfo("1");
+    case "getInfo":
+        $userHandler=new UserHandler();
+        $userHandler->getUserInfo();
+        break;
+
+    case "updateInfo":
+        $userHandler=new UserHandler();
+        $userHandler->updateUserInfo();
+        break;
+}
 
 
 
