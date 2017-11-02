@@ -10,13 +10,13 @@ class MyDB extends SQLite3
 {
     function __construct()
     {
-        $this->open('LuckyPie.db');
+        $this->open(dirname(__FILE__) . '/../LuckyPie.db');
     }
 }
-
+//
 //$db = new MyDB();
 //if (!$db) {
 //    echo $db->lastErrorMsg();
 //} else {
-//    echo "Opened database successfully\n";
+////    echo "Opened database successfully\n";
 //}

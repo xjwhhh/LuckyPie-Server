@@ -7,14 +7,28 @@
  */
 require_once ("SimpleHandler.php");
 require_once(dirname(__FILE__) . '/../entity/User.php');
-
+require_once (dirname(__FILE__).'/../data/UserData.php');
+header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Methods:POST');
+header('Access-Control-Allow-Headers:x-requested-with,content-type');
 class UserHandler extends SimpleHandler{
+
+    private $userData;
+
+    function __construct(){
+        $this->userData=new UserData();
+    }
 
     //post:account,password
     public function login(){
-//        print_r($_SERVER) ;
-//       print_r( $_REQUEST);
-
+        if(isset($_POST["account"])) {
+            $account = $_POST["account"];
+        }
+        if(isset($_POST['password'])) {
+            $password = $_POST['password'];
+        }
+        $user=$this->userData->selectUserData($account,$password);
+        echo json_encode($user);
     }
 
     //post:account,password,ensurePassword
@@ -50,3 +64,6 @@ class UserHandler extends SimpleHandler{
 
 
 }
+
+//$userHandler=new UserHandler();
+//$userHandler->login();
