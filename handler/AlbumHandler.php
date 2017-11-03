@@ -8,6 +8,10 @@
 require_once ("SimpleHandler.php");
 class albumHandler extends  SimpleHandler{
 
+    public function getAlbum(){
+
+    }
+
     public function addAlbum(){
 
     }

@@ -10,6 +10,7 @@ class Album
 {
     public $id;
     public $userId;
+    public $name;
     public $desc;
     public $imageUrls;
     public $numOfLikes;
@@ -48,6 +49,23 @@ class Album
     {
         $this->user_id = $user_id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
 
     /**
      * @return mixed

@@ -38,22 +38,41 @@ if (!$db) {
 //}
 //$db->close();
 
-$sql = <<<EOF
-      INSERT INTO USER (account,password,authority)
-      VALUES ('1','1',1);
+//$sql = <<<EOF
+//      INSERT INTO USER (account,password,authority)
+//      VALUES ('1','1',1);
+//
+//      INSERT INTO USER (account,password,authority)
+//      VALUES ('2','2',0);
+//      INSERT INTO USER (account,password,authority)
+//      VALUES ('3','3',0);
+//      INSERT INTO USER (account,password,authority)
+//      VALUES ('4','4',0);
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Records created successfully\n";
+//}
+//$db->close();
 
-      INSERT INTO USER (account,password,authority)
-      VALUES ('2','2',0);
-      INSERT INTO USER (account,password,authority)
-      VALUES ('3','3',0);
-      INSERT INTO USER (account,password,authority)
-      VALUES ('4','4',0);
-EOF;
 
-$ret = $db->exec($sql);
-if (!$ret) {
-    echo $db->lastErrorMsg();
-} else {
-    echo "Records created successfully\n";
-}
-$db->close();
+//create table album
+//$sql= <<<EOF
+//      CREATE TABLE album
+//      (id INTEGER PRIMARY KEY autoincrement,
+//      userId int   NOT NULL,
+//      name varchar(255) not null,
+//      description text
+//      );
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Table created successfully\n";
+//}
+//$db->close();

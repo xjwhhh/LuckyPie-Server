@@ -14,7 +14,6 @@ if(isset($_POST["option"]))
 
 switch ($option){
     case "login":
-
         $userHandler=new UserHandler();
         $userHandler->login();
         break;
