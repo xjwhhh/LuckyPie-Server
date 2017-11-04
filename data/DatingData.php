@@ -19,5 +19,29 @@ class DatingData{
         return "success";
     }
 
+    public function updateDating(){
+
+    }
+
+    public function deleteDating(){
+
+    }
+
+    public function selectDatingDataByUserId($userId){
+
+    }
+
+    public function selectHotDating(){
+
+    }
+
+    public function selectExploreDatingByUserId($userId){
+
+    }
+
+    public function selectFollowingDatingByUserId($userId){
+
+    }
+
 
 }

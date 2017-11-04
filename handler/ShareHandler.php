@@ -36,6 +36,10 @@ class shareHandler extends SimpleHandler
 
     }
 
+    public function getUserShares(){
+
+    }
+
     public function addShare()
     {
         if (isset($_POST['shareInfo'])) {

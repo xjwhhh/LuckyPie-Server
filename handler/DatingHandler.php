@@ -33,6 +33,10 @@ class datingHandler extends  SimpleHandler{
 
     }
 
+    public function getUserDating(){
+
+    }
+
     public function addDating(){
         if(isset($_POST['datingInfo'])){
             $datingInfo=$_POST['datingInfo'];

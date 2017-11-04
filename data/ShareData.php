@@ -18,4 +18,30 @@ class ShareData{
     public function insertShareData($share){
         echo "success";
     }
+
+    public function updateShareData(){
+
+    }
+
+    public function deleteShareData(){
+
+    }
+
+    public function selectSharesDataByUserId($userId){
+
+    }
+
+    public function selectHotShares(){
+
+    }
+
+    public function selectExploreSharesByUserId($userId){
+
+    }
+
+    public function selectFollowingSharesByUserId($userId){
+
+    }
+
+
 }
