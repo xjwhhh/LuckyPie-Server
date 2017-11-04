@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: xjwhhh
- * Date: 2017/10/31
+ * Dating: 2017/10/31
  * Time: 20:03
  */
 
@@ -13,10 +13,61 @@ class Album
     public $name;
     public $desc;
     public $imageUrls;
-    public $numOfLikes;
-    public $numOfForwards;
-    public $numOfComments;
-    public $comments;
+    public $tags;
+    public $createTime;
+    public $updateTime;
+
+    /**
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param mixed $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreateTime()
+    {
+        return $this->createTime;
+    }
+
+    /**
+     * @param mixed $createTime
+     */
+    public function setCreateTime($createTime)
+    {
+        $this->createTime = $createTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateTime()
+    {
+        return $this->updateTime;
+    }
+
+    /**
+     * @param mixed $updateTime
+     */
+    public function setUpdateTime($updateTime)
+    {
+        $this->updateTime = $updateTime;
+    }
+//    public $numOfLikes;
+//    public $numOfForwards;
+//    public $numOfComments;
+//    public $comments;
 
     /**
      * @return mixed
@@ -99,69 +150,7 @@ class Album
         $this->imageUrls = $imageUrls;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNumOfLikes()
-    {
-        return $this->numOfLikes;
-    }
 
-    /**
-     * @param mixed $numOfLikes
-     */
-    public function setNumOfLikes($numOfLikes)
-    {
-        $this->numOfLikes = $numOfLikes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumOfForwards()
-    {
-        return $this->numOfForwards;
-    }
-
-    /**
-     * @param mixed $numOfForwards
-     */
-    public function setNumOfForwards($numOfForwards)
-    {
-        $this->numOfForwards = $numOfForwards;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumOfComments()
-    {
-        return $this->numOfComments;
-    }
-
-    /**
-     * @param mixed $numOfComments
-     */
-    public function setNumOfComments($numOfComments)
-    {
-        $this->numOfComments = $numOfComments;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComments()
-    {
-        return $this->comments;
-    }
-
-    /**
-     * @param mixed $comments
-     */
-    public function setComments($comments)
-    {
-        $this->comments = $comments;
-    }
 
 
 

@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: xjwhhh
- * Date: 2017/10/31
+ * Dating: 2017/10/31
  * Time: 20:41
  */
 require_once (dirname(__FILE__) . '/../handler/UserHandler.php');

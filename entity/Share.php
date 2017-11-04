@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: xjwhhh
- * Date: 2017/10/31
+ * Dating: 2017/10/31
  * Time: 20:18
  */
 
@@ -11,10 +11,11 @@ class Share{
     public $userId;
     public $desc;
     public $imageUrls;
-    public $numOfLikes;
-    public $numOfForwards;
-    public $numOfComments;
-    public $comments;
+//    public $numOfLikes;
+//    public $numOfForwards;
+//    public $numOfComments;
+//    public $comments;
+    public $tags;
     public $postTime;
     public $postAddress;
 
@@ -85,66 +86,19 @@ class Share{
     /**
      * @return mixed
      */
-    public function getNumOfLikes()
+    public function getTags()
     {
-        return $this->numOfLikes;
+        return $this->tags;
     }
 
     /**
-     * @param mixed $numOfLikes
+     * @param mixed $tags
      */
-    public function setNumOfLikes($numOfLikes)
+    public function setTags($tags)
     {
-        $this->numOfLikes = $numOfLikes;
+        $this->tags = $tags;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNumOfForwards()
-    {
-        return $this->numOfForwards;
-    }
-
-    /**
-     * @param mixed $numOfForwards
-     */
-    public function setNumOfForwards($numOfForwards)
-    {
-        $this->numOfForwards = $numOfForwards;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNumOfComments()
-    {
-        return $this->numOfComments;
-    }
-
-    /**
-     * @param mixed $numOfComments
-     */
-    public function setNumOfComments($numOfComments)
-    {
-        $this->numOfComments = $numOfComments;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComments()
-    {
-        return $this->comments;
-    }
-
-    /**
-     * @param mixed $comments
-     */
-    public function setComments($comments)
-    {
-        $this->comments = $comments;
-    }
 
     /**
      * @return mixed

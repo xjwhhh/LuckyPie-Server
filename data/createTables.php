@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: xjwhhh
- * Date: 2017/11/1
+ * Dating: 2017/11/1
  * Time: 22:35
  */
 require_once ("connect.php");
