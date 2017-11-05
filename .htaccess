@@ -1,0 +1,44 @@
+# 开启 rewrite 功能
+Options +FollowSymlinks
+RewriteEngine on
+
+# 重写规则
+RewriteRule ^site/list/$   RestController.php?view=all [nc,qsa]
+RewriteRule ^site/list/([0-9]+)/$   RestController.php?view=single&id=$1 [nc,qsa]
+RewriteRule ([a-zA-Z])-([0-9])-([0-9])\.html$ index.php?action=$1&id=$2&page=$3
+#user
+#RewriteRule ^user/$ controller/UserController.php?option=login [nc,qsa]
+RewriteRule ^api/post/user/login$ controller/UserController.php?option=login [nc,qsa]
+RewriteRule ^api/post/user/register$ controller/UserController.php?option=register [nc,qsa]
+RewriteRule ^api/get/user/info/([0-9]+)$ controller/UserController.php?option=getinfo&id=$1 [nc,qsa]
+RewriteRule ^api/post/user/info/([0-9]+)$ controller/UserController.php?option=updateinfo&id=$1 [nc,qsa]
+
+#post
+RewriteRule ^api/post/post/dating/upload$ controller/DatingController.php?option=upload [nc,qsa]
+RewriteRule ^api/post/post/album/upload$ controller/AlbumController.php?option=upload [nc,qsa]
+RewriteRule ^api/post/post/share/upload$ controller/ShareController.php?option=upload [nc,qsa]
+
+RewriteRule ^api/post/post/dating/update$ controller/DatingController.php?option=update [nc,qsa]
+RewriteRule ^api/post/post/album/update$ controller/AlbumController.php?option=update [nc,qsa]
+RewriteRule ^api/post/post/share/update$ controller/ShareController.php?option=update [nc,qsa]
+
+RewriteRule ^api/post/post/dating/delete$ controller/DatingController.php?option=delete [nc,qsa]
+RewriteRule ^api/post/post/album/delete$ controller/AlbumController.php?option=delete [nc,qsa]
+RewriteRule ^api/post/post/share/delete$ controller/ShareController.php?option=delete [nc,qsa]
+
+#follow
+RewriteRule ^api/post/follow/dating$ controller/DatingController.php?option=getFollowDating [nc,qsa]
+RewriteRule ^api/post/follow/share$ controller/ShareController.php?option=getFollowShare [nc,qsa]
+
+#explore
+RewriteRule ^api/get/explore/dating$ controller/DatingController.php?option=getExploreDating [nc,qsa]
+RewriteRule ^api/get/explore/share$ controller/ShareController.php?option=getExploreShare [nc,qsa]
+RewriteRule ^api/get/explore/photographer/hot$ controller/UserController.php?option=getExploreHotPhotographer [nc,qsa]
+RewriteRule ^api/get/explore/photographer/best$ controller/UserController.php?option=getExploreBestPhotographer [nc,qsa]
+RewriteRule ^api/get/explore/photographer/new$ controller/UserController.php?option=getExploreNewPhotographer [nc,qsa]
+RewriteRule ^api/get/explore/model/hot$ controller/UserController.php?option=getExploreHotModel [nc,qsa]
+RewriteRule ^api/get/explore/model/best$ controller/UserController.php?option=getExploreBestModel [nc,qsa]
+RewriteRule ^api/get/explore/model/new$ controller/UserController.php?option=getExploreNewModel [nc,qsa]
+
+#notice
+RewriteRule ^api/post/notice$ controller/NoticeController.php?option=getNotice [nc,qsa]

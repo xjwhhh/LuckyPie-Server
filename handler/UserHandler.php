@@ -67,18 +67,37 @@ class UserHandler extends SimpleHandler
 
     }
 
-    public function getExplorePhotographer()
+    public function getExploreHotPhotographer()
     {
 
     }
 
-    public function getExploreModel()
+    public function getExploreBestPhotographer()
+    {
+
+    }
+
+
+    public function getExploreNewPhotographer()
+    {
+
+    }
+
+
+    public function getExploreHotModel()
+    {
+
+    }
+
+    public function getExploreBestModel()
+    {
+
+    }
+
+    public function getExploreNewModel()
     {
 
     }
 
 
 }
-
-//$userHandler=new UserHandler();
-//$userHandler->login();

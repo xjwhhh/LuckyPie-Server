@@ -91,6 +91,30 @@ EOF;
         }
     }
 
+    public function selectHotPhotographer(){
+
+}
+
+    public function selectBestPhotographer(){
+
+    }
+
+    public function selectNewPhotographer(){
+
+    }
+
+    public function selectHotModel(){
+
+    }
+
+    public function selectBestModel(){
+
+    }
+
+    public function selectNewModel(){
+
+    }
+
 
 }
 
