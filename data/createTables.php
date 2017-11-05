@@ -286,12 +286,12 @@ if (!$db) {
 //    echo "Records created successfully\n";
 //}
 //$db->close();
-
-////create table dateTag
+//
+////create table datingTag
 //$sql= <<<EOF
-//      CREATE TABLE dateTag
+//      CREATE TABLE datingTag
 //      (tagId int not null,
-//      dateId int not null
+//      datingId int not null
 //      );
 //EOF;
 //

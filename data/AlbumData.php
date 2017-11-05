@@ -18,7 +18,7 @@ class AlbumData
         $this->db = new MyDB();
     }
 
-    //对album的操作涉及三个表,album,albumphoto,albumtag
+    //对album的操作涉及三个表,album,albumPhoto,albumTag
 
     public function selectAlbumData($userId)
     {
@@ -82,6 +82,8 @@ EOF;
     {
         $sql = <<<EOF
       DELETE from album where id=$albumId;
+      DELETE from albumPhoto where albumId=$albumId;
+      DELETE from albumTag where albumId=$albumId;
 EOF;
         $ret = $this->db->exec($sql);
         if (!$ret) {

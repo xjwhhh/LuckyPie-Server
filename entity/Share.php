@@ -6,7 +6,8 @@
  * Time: 20:18
  */
 
-class Share{
+class Share
+{
     public $id;
     public $userId;
     public $desc;
@@ -18,6 +19,23 @@ class Share{
     public $tags;
     public $postTime;
     public $postAddress;
+    public $forwardShareId;
+
+    /**
+     * @return mixed
+     */
+    public function getForwardShareId()
+    {
+        return $this->forwardShareId;
+    }
+
+    /**
+     * @param mixed $forwardShareId
+     */
+    public function setForwardShareId($forwardShareId)
+    {
+        $this->forwardShareId = $forwardShareId;
+    }
 
     /**
      * @return mixed
