@@ -33,6 +33,8 @@ EOF;
             $album->setUserId($row['userId']);
             $album->setName($row['name']);
             $album->setDesc($row['description']);
+            $album->setCreateTime($row['createTime']);
+            $album->setUpdateTime($row['updateTime']);
             array_push($albumArray, $album);
         }
         return $albumArray;
@@ -41,15 +43,15 @@ EOF;
 
     public function insertAlbumData($album)
     {
-        //todo 查重问题，名字不能一样，这个可以在前端做，根据用户所有已经建立的相册名
         $returnAlbum = new Album();
         $userId = $album->getUserId();
         $name = $album->getName();
         $description = $album->getDesc();
+        $createTime = $album->getCreateTime();
+        $updateTime = $album->getUpdateTime();
         $sql = <<<EOF
-      INSERT INTO album (userId,name,description)
-      VALUES ($userId,$name,$description);
-     ;
+      INSERT INTO album (userId,name,description,createTime,updateTime)
+      VALUES ($userId,$name,$description,$createTime,$updateTime);
 EOF;
         $ret = $this->db->exec($sql);
         //插入成功
@@ -63,6 +65,8 @@ EOF;
                 $returnAlbum->setUserId($row['userId']);
                 $returnAlbum->setName($row['name']);
                 $returnAlbum->setDesc($row['description']);
+                $returnAlbum->setCreateTime($row['createTime']);
+                $returnAlbum->setUpdateTime($row['updateTime']);
             }
         }
         return $returnAlbum;
