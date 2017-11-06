@@ -31,8 +31,8 @@ RewriteRule ^api/post/follow/dating$ controller/DatingController.php?option=getF
 RewriteRule ^api/post/follow/share$ controller/ShareController.php?option=getFollowShare [nc,qsa]
 
 #explore
-RewriteRule ^api/get/explore/dating$ controller/DatingController.php?option=getExploreDating [nc,qsa]
-RewriteRule ^api/get/explore/share$ controller/ShareController.php?option=getExploreShare [nc,qsa]
+RewriteRule ^api/post/explore/dating$ controller/DatingController.php?option=getExploreDating [nc,qsa]
+RewriteRule ^api/post/explore/share$ controller/ShareController.php?option=getExploreShare [nc,qsa]
 RewriteRule ^api/get/explore/photographer/hot$ controller/UserController.php?option=getExploreHotPhotographer [nc,qsa]
 RewriteRule ^api/get/explore/photographer/best$ controller/UserController.php?option=getExploreBestPhotographer [nc,qsa]
 RewriteRule ^api/get/explore/photographer/new$ controller/UserController.php?option=getExploreNewPhotographer [nc,qsa]
@@ -42,3 +42,6 @@ RewriteRule ^api/get/explore/model/new$ controller/UserController.php?option=get
 
 #notice
 RewriteRule ^api/post/notice$ controller/NoticeController.php?option=getNotice [nc,qsa]
+
+#hot
+RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShares[nc,qsa]
