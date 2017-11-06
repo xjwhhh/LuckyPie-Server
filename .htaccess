@@ -7,7 +7,6 @@ RewriteRule ^site/list/$   RestController.php?view=all [nc,qsa]
 RewriteRule ^site/list/([0-9]+)/$   RestController.php?view=single&id=$1 [nc,qsa]
 RewriteRule ([a-zA-Z])-([0-9])-([0-9])\.html$ index.php?action=$1&id=$2&page=$3
 #user
-#RewriteRule ^user/$ controller/UserController.php?option=login [nc,qsa]
 RewriteRule ^api/post/user/login$ controller/UserController.php?option=login [nc,qsa]
 RewriteRule ^api/post/user/register$ controller/UserController.php?option=register [nc,qsa]
 RewriteRule ^api/get/user/info/([0-9]+)$ controller/UserController.php?option=getinfo&id=$1 [nc,qsa]
@@ -44,4 +43,4 @@ RewriteRule ^api/get/explore/model/new$ controller/UserController.php?option=get
 RewriteRule ^api/post/notice$ controller/NoticeController.php?option=getNotice [nc,qsa]
 
 #hot
-RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShares[nc,qsa]
+RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShare[nc,qsa]

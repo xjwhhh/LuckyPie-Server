@@ -17,4 +17,25 @@ switch ($option){
         $datingHandler=new DatingHandler();
         $datingHandler->addDating();
         break;
+
+    case "update":
+        $datingHandler=new DatingHandler();
+        $datingHandler->updateDating();
+        break;
+
+    case "delete":
+        $datingHandler=new DatingHandler();
+        $datingHandler->deleteDating();
+        break;
+
+    case "getFollowDating":
+        $datingHandler=new DatingHandler();
+        $datingHandler->getFollowingDating();
+        break;
+
+    case "getExploreDating":
+        $datingHandler=new DatingHandler();
+        $datingHandler->getExploreDating();
+        break;
+
 }

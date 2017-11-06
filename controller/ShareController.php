@@ -17,4 +17,29 @@ switch ($option) {
         $shareHandler = new ShareHandler();
         $shareHandler->addShare();
         break;
+
+    case "update":
+        $shareHandler = new ShareHandler();
+        $shareHandler->updateShare();
+        break;
+
+    case "delete":
+        $shareHandler = new ShareHandler();
+        $shareHandler->deleteShare();
+        break;
+
+    case "getFollowShare":
+        $shareHandler = new ShareHandler();
+        $shareHandler->getFollowingShares();
+        break;
+
+    case "getExploreShare":
+        $shareHandler = new ShareHandler();
+        $shareHandler->getExploreShares();
+        break;
+
+    case "getHotShare":
+        $shareHandler = new ShareHandler();
+        $shareHandler->getHotShares();
+        break;
 }

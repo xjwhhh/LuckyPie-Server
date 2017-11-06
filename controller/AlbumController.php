@@ -17,4 +17,14 @@ switch ($option) {
         $albumHandler = new AlbumHandler();
         $albumHandler->addAlbum();
         break;
+
+    case "update":
+        $albumHandler = new AlbumHandler();
+        $albumHandler->updateAlbum();
+        break;
+
+    case "delete":
+        $albumHandler = new AlbumHandler();
+        $albumHandler->deleteAlbum();
+        break;
 }
