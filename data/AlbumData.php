@@ -35,6 +35,26 @@ EOF;
             $album->setDesc($row['description']);
             $album->setCreateTime($row['createTime']);
             $album->setUpdateTime($row['updateTime']);
+            //获取photo
+            $photoArray=array();
+            $photoSql=<<<EOF
+      SELECT photo.url from albumPhoto,photo where albumPhoto.albumId=$album->getId() and photo.id=albumPhoto.photoId;
+EOF;
+            $photoRes = $this->db->query($photoSql);
+            while($photoRow=$photoRes->fetchArray(SQLITE3_ASSOC)){
+                array_push($photoArray,$photoRow['url']);
+            }
+            $album->setImageUrls($photoArray);
+            //获取tag
+            $tagArray=array();
+            $tagSql=<<<EOF
+      SELECT tag.name from albumTag,tag where albumTag.albumId=$album->getId() and tag.id=albumTag.tagId;
+EOF;
+            $tagRes = $this->db->query($tagSql);
+            while($tagRow=$tagRes->fetchArray(SQLITE3_ASSOC)){
+                array_push($tagArray,$tagRow['name']);
+            }
+            $album->setTags($tagArray);
             array_push($albumArray, $album);
         }
         return $albumArray;
@@ -43,12 +63,13 @@ EOF;
 
     public function insertAlbumData($album)
     {
-        $returnAlbum = new Album();
+        $returnAlbum = $album;
         $userId = $album->getUserId();
         $name = $album->getName();
         $description = $album->getDesc();
         $createTime = $album->getCreateTime();
         $updateTime = $album->getUpdateTime();
+        //插入album
         $sql = <<<EOF
       INSERT INTO album (userId,name,description,createTime,updateTime)
       VALUES ($userId,$name,$description,$createTime,$updateTime);
@@ -62,14 +83,69 @@ EOF;
             $res = $this->db->query($sql);
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                 $returnAlbum->setId($row['id']);
-                $returnAlbum->setUserId($row['userId']);
-                $returnAlbum->setName($row['name']);
-                $returnAlbum->setDesc($row['description']);
-                $returnAlbum->setCreateTime($row['createTime']);
-                $returnAlbum->setUpdateTime($row['updateTime']);
+//                $returnAlbum->setUserId($row['userId']);
+//                $returnAlbum->setName($row['name']);
+//                $returnAlbum->setDesc($row['description']);
+//                $returnAlbum->setCreateTime($row['createTime']);
+//                $returnAlbum->setUpdateTime($row['updateTime']);
             }
         }
-        return $returnAlbum;
+        else{
+            return new Album();
+        }
+        //插入albumPhoto
+        $photoArray = $album->getImageUrls();
+        foreach ($photoArray as $url) {
+            $photoId=0;
+//            //todo 不知道是否需要看该照片是否已经上传过
+//            $photoSql=<<<EOF
+//    select id from photo where url=$url
+//EOF;
+//            $photoRes=$this->db->query($photoSql);
+
+            //todo date
+            $now = date();
+            $photoSql = <<<EOF
+insert into photo values($now,$url);
+EOF;
+            $photoRes = $this->db->exec($photoSql);
+            //插入photo成功
+            if ($photoRes) {
+                $photoSql = <<<EOF
+select * from photo where uploadTine=$now and url=$url;
+EOF;
+                $photoRes = $this->db->exec($photoSql);
+                while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+                    $photoId = $photoRow['id'];
+                }
+            }
+            else{
+                return new Album();
+            }
+
+            //插入albumPhoto
+            $albumPhotoSql = <<<EOF
+insert into albumPhoto values ($photoId,$returnAlbum->getId());
+EOF;
+            $albumPhotoRes = $this->db->exec($albumPhotoSql);
+            if(!$albumPhotoRes){
+                return new Album();
+            }
+        }
+
+        $tagArray=$album->getTags();
+        foreach ($tagArray as $tag){
+            $tagSql=<<<EOF
+select id from tag where name=$tag;
+EOF;
+            $tagRes=$this->db->query($tagSql);
+            //todo
+//            while($)
+
+        }
+
+
+            return $returnAlbum;
     }
 
     public function updateAlbumData()

@@ -10,6 +10,7 @@ require_once ("SimpleHandler.php");
 class noticeHandler extends SimpleHandler{
     public function getNotice(){
 
+
     }
 
     public function addNotice(){
