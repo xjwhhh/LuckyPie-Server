@@ -122,21 +122,21 @@ if (!$db) {
 //$db->close();
 
 //create table photo
-$sql= <<<EOF
-      CREATE TABLE photo
-      (id INTEGER PRIMARY KEY autoincrement,
-      uploadTime varchar(255) not null,
-      url varchar(255) not null
-      );
-EOF;
-
-$ret = $db->exec($sql);
-if (!$ret) {
-    echo $db->lastErrorMsg();
-} else {
-    echo "Records created successfully\n";
-}
-$db->close();
+//$sql= <<<EOF
+//      CREATE TABLE photo
+//      (id INTEGER PRIMARY KEY autoincrement,
+//      uploadTime varchar(255) not null,
+//      url varchar(255) not null
+//      );
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Records created successfully\n";
+//}
+//$db->close();
 
 ////create table datePhoto
 //$sql= <<<EOF
@@ -259,7 +259,7 @@ $db->close();
 //$sql= <<<EOF
 //      CREATE TABLE tag
 //      (id INTEGER PRIMARY KEY autoincrement,
-//      name varchar(255) not null
+//      type varchar(255) not null
 //      );
 //EOF;
 //
@@ -317,4 +317,85 @@ $db->close();
 //} else {
 //    echo "Records created successfully\n";
 //}
+//$db->close();
+
+
+//$array=array("情侣", "商务", "民国", "汉服", "孕照", "儿童", "暗黑", "情绪", "私房", "夜景", "校园", "妆容", "古风", "淘宝", "时尚", "和服", "旗袍", "韩系", "欧美", "森系", "少女", "清新", "婚礼", "cos", "胶片", "黑白", "纪实", "日系");
+//foreach ($array as $tag) {
+//    $tag="'".$tag."'";
+//    $sql = <<<EOF
+//      INSERT INTO tag (type)
+//      VALUES ($tag );
+//EOF;
+//
+//    $ret = $db->exec($sql);
+//    if (!$ret) {
+//        echo $db->lastErrorMsg();
+//    } else {
+//        echo "Records created successfully\n";
+//    }
+//}
+//$db->close();
+//$sql = <<<EOF
+//      SELECT * from tag;
+//EOF;
+//
+//$ret = $db->query($sql);
+//while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+//    echo "ID = " . $row['id'] . "\n";
+//    echo "type = " . $row['type'] . "\n";
+//}
+//echo "Operation done successfully\n";
+//$db->close();
+//
+$sql = <<<EOF
+      INSERT INTO share (userId)
+      VALUES (100);
+
+       INSERT INTO share (userId)
+      VALUES (100);
+
+ INSERT INTO share (userId)
+      VALUES (100);
+EOF;
+
+$ret = $db->exec($sql);
+if (!$ret) {
+    echo $db->lastErrorMsg();
+} else {
+    echo "Records created successfully\n";
+}
+
+
+
+$sql = <<<EOF
+      SELECT * from share;
+EOF;
+
+$ret = $db->query($sql);
+while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+    echo "ID = " . $row['userId'] . "\n";
+    echo "ID = " . $row['id'] . "\n";
+//    echo "time = " . $row['uploadTime'] . "\n";
+//    echo "url = " . $row['url'] . "\n";
+}
+echo "Operation done successfully\n";
+//todo 数据库记录消失
+$db->close();
+
+
+//$sql = <<<EOF
+//      SELECT * from share;
+//EOF;
+//
+//$ret = $db->query($sql);
+//print_r($ret);
+//while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+//    echo "erty";
+//    echo "ID = " . $row['id'] . "\n";
+//    echo "account = " . $row['postTime'] . "\n";
+//    echo "password = " . $row['description'] . "\n";
+//}
+//echo "Operation done successfully\n";
+//
 //$db->close();

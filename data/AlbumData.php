@@ -73,6 +73,10 @@ EOF;
         $createTime = $album->getCreateTime();
         $updateTime = $album->getUpdateTime();
 
+        $description="'".$description."'";
+        $createTime="'".$createTime."'";
+        $updateTime="'".$updateTime."'";
+
 
         //插入album
         $sql = <<<EOF
@@ -97,6 +101,8 @@ EOF;
         } else {
             return new Album();
         }
+
+        $albumId = $returnAlbum->getId();
 
         $urlArray = array();//返回的imageURL
         //插入albumPhoto
@@ -136,7 +142,6 @@ EOF;
                 return new Album();
             }
             //获得photoId插入albumPhoto
-            $albumId = $returnAlbum->getId();
             $albumPhotoSql = <<<EOF
 insert into albumPhoto (photoId,albumId) values ($photoId,$albumId);
 EOF;
@@ -148,27 +153,27 @@ EOF;
         $returnAlbum->setImageUrls($urlArray);
 
         //插入albumTag
+        foreach ($tagArray as $tag) {
+            $tag="'".$tag."'";
+            $tagId = -1;
+            $tagSql = <<<EOF
+select id from tag where type=$tag;
+EOF;
+            $tagRes = $this->db->query($tagSql);
+            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                $tagId = $tagRow['id'];
+            }
+            $albumTagSql = <<<EOF
+insert into albumTag values ($albumId,$tagId);
+EOF;
+            $albumTagRes = $this->db > exec($albumTagSql);
+            if (!$albumTagRes) {
+                return new Album();
+            }
 
-//        foreach ($tagArray as $tag) {
-//            $tagId = -1;
-//            $tagSql = <<<EOF
-//select id from tag where name=$tag;
-//EOF;
-//            //todo 在tag表里插入数据
-//            $tagRes = $this->db->query($tagSql);
-//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-//                $tagId = $tagRow['id'];
-//            }
-//            $albumTagSql = <<<EOF
-//insert into albumTag values ($returnAlbum->getId(),$tagId);
-//EOF;
-//            $albumTagRes = $this->db > exec($albumTagSql);
-//            if (!$albumTagRes) {
-//                return new Album();
-//            }
-//
-//        }
-//        print_r($returnAlbum);
+        }
+        $returnAlbum->setTags($tagArray);
+        print_r($returnAlbum);
         return $returnAlbum;
     }
 

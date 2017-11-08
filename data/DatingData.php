@@ -33,8 +33,11 @@ class DatingData
         $tagArray = $dating->getTags();
 
         //todo 中文乱码问题
+        $description="'".$description."'";
+        $postTime="'".$postTime."'";
         $cost = "'" . $cost . "'";
         $photoAddress = "'" . $photoAddress . "'";
+        $postAddress="'".$postAddress."'";
         //插入dating
         $sql = <<<EOF
       INSERT INTO dating (userId,description,cost,photoTime,photoAddress,postTime,postAddress)
@@ -58,6 +61,9 @@ EOF;
                 $returnDating->setPostAddress($row['postAddress']);
             }
         }
+
+        $datingId = $returnDating->getId();
+
         $urlArray = array();//返回的imageURL
         //插入sharePhoto
         foreach ($photoArray as $base64Code) {
@@ -96,7 +102,7 @@ EOF;
                 return new Dating();
             }
             //获得photoId插入sharePhoto
-            $datingId = $returnDating->getId();
+
             $datingPhotoSql = <<<EOF
 insert into datingPhoto (photoId,datingId) values ($photoId,$datingId);
 EOF;
@@ -108,26 +114,26 @@ EOF;
         $returnDating->setImageUrls($urlArray);
 
         //插入albumTag
+        foreach ($tagArray as $tag) {
+            $tag="'".$tag."'";
+            $tagId = -1;
+            $tagSql = <<<EOF
+select id from tag where type=$tag;
+EOF;
+            //todo 在tag表里插入数据
+            $tagRes = $this->db->query($tagSql);
+            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                $tagId = $tagRow['id'];
+            }
+            $albumTagSql = <<<EOF
+insert into albumTag values ($datingId,$tagId);
+EOF;
+            $albumTagRes = $this->db > exec($albumTagSql);
+            if (!$albumTagRes) {
+                return new Album();
+            }
 
-//        foreach ($tagArray as $tag) {
-//            $tagId = -1;
-//            $tagSql = <<<EOF
-//select id from tag where name=$tag;
-//EOF;
-//            //todo 在tag表里插入数据
-//            $tagRes = $this->db->query($tagSql);
-//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-//                $tagId = $tagRow['id'];
-//            }
-//            $albumTagSql = <<<EOF
-//insert into albumTag values ($returnAlbum->getId(),$tagId);
-//EOF;
-//            $albumTagRes = $this->db > exec($albumTagSql);
-//            if (!$albumTagRes) {
-//                return new Album();
-//            }
-//
-//        }
+        }
         return $returnDating;
 
 
