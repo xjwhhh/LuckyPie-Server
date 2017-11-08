@@ -64,7 +64,7 @@ if (!$db) {
 //      CREATE TABLE album
 //      (id INTEGER PRIMARY KEY autoincrement,
 //      userId int   NOT NULL,
-//      name varchar(255) not null,
+//      title varchar(255) not null,
 //      description text,
 //      createTime varchar(255),
 //      updateTime varchar(255)
@@ -122,21 +122,21 @@ if (!$db) {
 //$db->close();
 
 //create table photo
-//$sql= <<<EOF
-//      CREATE TABLE photo
-//      (id INTEGER PRIMARY KEY autoincrement,
-//      uploadTime varchar(255) not null,
-//      url text not null
-//      );
-//EOF;
-//
-//$ret = $db->exec($sql);
-//if (!$ret) {
-//    echo $db->lastErrorMsg();
-//} else {
-//    echo "Records created successfully\n";
-//}
-//$db->close();
+$sql= <<<EOF
+      CREATE TABLE photo
+      (id INTEGER PRIMARY KEY autoincrement,
+      uploadTime varchar(255) not null,
+      url varchar(255) not null
+      );
+EOF;
+
+$ret = $db->exec($sql);
+if (!$ret) {
+    echo $db->lastErrorMsg();
+} else {
+    echo "Records created successfully\n";
+}
+$db->close();
 
 ////create table datePhoto
 //$sql= <<<EOF

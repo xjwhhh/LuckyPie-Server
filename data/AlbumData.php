@@ -63,84 +63,112 @@ EOF;
 
     public function insertAlbumData($album)
     {
-        $returnAlbum = $album;
+        $returnAlbum = new Album();
+
         $userId = $album->getUserId();
         $name = $album->getName();
         $description = $album->getDesc();
+        $photoArray = $album->getImageUrls();
+        $tagArray = $album->getTags();
         $createTime = $album->getCreateTime();
         $updateTime = $album->getUpdateTime();
+
+
         //插入album
         $sql = <<<EOF
-      INSERT INTO album (userId,name,description,createTime,updateTime)
+      INSERT INTO album (userId,title,description,createTime,updateTime)
       VALUES ($userId,$name,$description,$createTime,$updateTime);
 EOF;
         $ret = $this->db->exec($sql);
         //插入album成功
         if ($ret) {
             $sql = <<<EOF
-      SELECT * from album where userId=$userId and name=$name;
+      SELECT * from album where userId=$userId and title=$name;
 EOF;
             $res = $this->db->query($sql);
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                 $returnAlbum->setId($row['id']);
+                $returnAlbum->setUserId($row['userId']);
+                $returnAlbum->setName($row['title']);
+                $returnAlbum->setDesc($row['description']);
+                $returnAlbum->setCreateTime($row['createTime']);
+                $returnAlbum->setUpdateTime($row['updateTime']);
             }
         } else {
             return new Album();
         }
 
+        $urlArray = array();//返回的imageURL
         //插入albumPhoto
-        $photoArray = $album->getImageUrls();
-        foreach ($photoArray as $url) {
+        foreach ($photoArray as $base64Code) {
             $photoId = 0;
-            //todo 将照片base64解码
+            //todo 将照片base64解码,但保存之后是损坏的，需要解决
             //不查看照片是否已经上传过
-            $now = date("Y-m-d H:i:s");
+            //上传至服务器
+            preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64Code, $result);
+            $type = $result[2];
+            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" . date('Ymd', time()) . "/";
+            if (!file_exists($new_file)) {
+//检查是否有该文件夹，如果没有就创建，并给予最高权限
+                mkdir($new_file, 0700);
+            }
+            $new_file = $new_file . time() . ".{$type}";
+            file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64Code)));
+            $now = date("Y-m-d H:i:s", time());
+            $now = "'" . $now . "'";
+            $new_file = "'" . $new_file . "'";
             $photoSql = <<<EOF
-insert into photo values($now,$url);
+insert into photo (uploadTime,url) values($now,$new_file);
 EOF;
             $photoRes = $this->db->exec($photoSql);
             //插入photo成功
             if ($photoRes) {
                 $photoSql = <<<EOF
-select * from photo where uploadTine=$now and url=$url;
+select * from photo where uploadTime=$now and url=$new_file;
 EOF;
-                $photoRes = $this->db->exec($photoSql);
+                $photoRes = $this->db->query($photoSql);
+                //返回图片在服务器存储的位置
                 while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
                     $photoId = $photoRow['id'];
+                    array_push($urlArray, $photoRow['url']);
                 }
             } else {
                 return new Album();
             }
             //获得photoId插入albumPhoto
+            $albumId = $returnAlbum->getId();
             $albumPhotoSql = <<<EOF
-insert into albumPhoto values ($photoId,$returnAlbum->getId());
+insert into albumPhoto (photoId,albumId) values ($photoId,$albumId);
 EOF;
             $albumPhotoRes = $this->db->exec($albumPhotoSql);
             if (!$albumPhotoRes) {
                 return new Album();
             }
         }
+        $returnAlbum->setImageUrls($urlArray);
 
         //插入albumTag
-        $tagArray = $album->getTags();
-        foreach ($tagArray as $tag) {
-            $tagId = -1;
-            $tagSql = <<<EOF
-select id from tag where name=$tag;
-EOF;
-            $tagRes = $this->db->query($tagSql);
-            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-                $tagId = $tagRow['id'];
-            }
-            $albumTagSql = <<<EOF
-insert into albumTag values ($returnAlbum->getId(),$tagId);
-EOF;
-            $albumTagRes = $this->db > exec($albumTagSql);
-            if (!$albumTagRes) {
-                return new Album();
-            }
 
-        }
+//        foreach ($tagArray as $tag) {
+//            $tagId = -1;
+//            $tagSql = <<<EOF
+//select id from tag where name=$tag;
+//EOF;
+//            //todo 在tag表里插入数据
+//            $tagRes = $this->db->query($tagSql);
+//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+//                $tagId = $tagRow['id'];
+//            }
+//            $albumTagSql = <<<EOF
+//insert into albumTag values ($returnAlbum->getId(),$tagId);
+//EOF;
+//            $albumTagRes = $this->db > exec($albumTagSql);
+//            if (!$albumTagRes) {
+//                return new Album();
+//            }
+//
+//        }
+//        print_r($returnAlbum);
         return $returnAlbum;
     }
 

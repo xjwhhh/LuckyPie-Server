@@ -32,22 +32,16 @@ class albumHandler extends SimpleHandler
             $albumInfo = $_POST['albumInfo'];
         }
         $temp = json_decode($albumInfo);
-//        print_r($temp);
         $album = new Album();
         $album->setName($temp->name);
         $album->setDesc($temp->desc);
         $album->setUserId($temp->userId);
         $album->setImageUrls($temp->imageUrls);
+        $album->setTags($temp->tags);
         $album->setCreateTime($temp->createTime);
         $album->setUpdateTime($temp->updateTime);
-//        print_r($album);
-//        echo $temp->userId;
 
         $result = $this->albumData->insertAlbumData($album);
-
-//        echo $datingInfo;
-//        print_r($dating);
-//        echo  $result;
         echo json_encode($result);
 
     }
