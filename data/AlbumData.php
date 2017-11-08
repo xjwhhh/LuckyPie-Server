@@ -36,23 +36,23 @@ EOF;
             $album->setCreateTime($row['createTime']);
             $album->setUpdateTime($row['updateTime']);
             //获取photo
-            $photoArray=array();
-            $photoSql=<<<EOF
+            $photoArray = array();
+            $photoSql = <<<EOF
       SELECT photo.url from albumPhoto,photo where albumPhoto.albumId=$album->getId() and photo.id=albumPhoto.photoId;
 EOF;
             $photoRes = $this->db->query($photoSql);
-            while($photoRow=$photoRes->fetchArray(SQLITE3_ASSOC)){
-                array_push($photoArray,$photoRow['url']);
+            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+                array_push($photoArray, $photoRow['url']);
             }
             $album->setImageUrls($photoArray);
             //获取tag
-            $tagArray=array();
-            $tagSql=<<<EOF
+            $tagArray = array();
+            $tagSql = <<<EOF
       SELECT tag.name from albumTag,tag where albumTag.albumId=$album->getId() and tag.id=albumTag.tagId;
 EOF;
             $tagRes = $this->db->query($tagSql);
-            while($tagRow=$tagRes->fetchArray(SQLITE3_ASSOC)){
-                array_push($tagArray,$tagRow['name']);
+            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                array_push($tagArray, $tagRow['name']);
             }
             $album->setTags($tagArray);
             array_push($albumArray, $album);
@@ -75,7 +75,7 @@ EOF;
       VALUES ($userId,$name,$description,$createTime,$updateTime);
 EOF;
         $ret = $this->db->exec($sql);
-        //插入成功
+        //插入album成功
         if ($ret) {
             $sql = <<<EOF
       SELECT * from album where userId=$userId and name=$name;
@@ -83,28 +83,18 @@ EOF;
             $res = $this->db->query($sql);
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
                 $returnAlbum->setId($row['id']);
-//                $returnAlbum->setUserId($row['userId']);
-//                $returnAlbum->setName($row['name']);
-//                $returnAlbum->setDesc($row['description']);
-//                $returnAlbum->setCreateTime($row['createTime']);
-//                $returnAlbum->setUpdateTime($row['updateTime']);
             }
-        }
-        else{
+        } else {
             return new Album();
         }
+
         //插入albumPhoto
         $photoArray = $album->getImageUrls();
         foreach ($photoArray as $url) {
-            $photoId=0;
-//            //todo 不知道是否需要看该照片是否已经上传过
-//            $photoSql=<<<EOF
-//    select id from photo where url=$url
-//EOF;
-//            $photoRes=$this->db->query($photoSql);
-
-            //todo date
-            $now = date();
+            $photoId = 0;
+            //todo 将照片base64解码
+            //不查看照片是否已经上传过
+            $now = date("Y-m-d H:i:s");
             $photoSql = <<<EOF
 insert into photo values($now,$url);
 EOF;
@@ -118,34 +108,40 @@ EOF;
                 while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
                     $photoId = $photoRow['id'];
                 }
-            }
-            else{
+            } else {
                 return new Album();
             }
-
-            //插入albumPhoto
+            //获得photoId插入albumPhoto
             $albumPhotoSql = <<<EOF
 insert into albumPhoto values ($photoId,$returnAlbum->getId());
 EOF;
             $albumPhotoRes = $this->db->exec($albumPhotoSql);
-            if(!$albumPhotoRes){
+            if (!$albumPhotoRes) {
                 return new Album();
             }
         }
 
-        $tagArray=$album->getTags();
-        foreach ($tagArray as $tag){
-            $tagSql=<<<EOF
+        //插入albumTag
+        $tagArray = $album->getTags();
+        foreach ($tagArray as $tag) {
+            $tagId = -1;
+            $tagSql = <<<EOF
 select id from tag where name=$tag;
 EOF;
-            $tagRes=$this->db->query($tagSql);
-            //todo
-//            while($)
+            $tagRes = $this->db->query($tagSql);
+            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                $tagId = $tagRow['id'];
+            }
+            $albumTagSql = <<<EOF
+insert into albumTag values ($returnAlbum->getId(),$tagId);
+EOF;
+            $albumTagRes = $this->db > exec($albumTagSql);
+            if (!$albumTagRes) {
+                return new Album();
+            }
 
         }
-
-
-            return $returnAlbum;
+        return $returnAlbum;
     }
 
     public function updateAlbumData()
