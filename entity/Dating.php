@@ -10,10 +10,6 @@ class Dating{
     public $userId;
     public $desc;
     public $imageUrls;
-//    public $numOfLikes;
-//    public $numOfForwards;
-//    public $numOfComments;
-//    public $comments;
     public $cost;
     public $tags;
     public $photoTime;
@@ -58,15 +54,15 @@ class Dating{
      */
     public function getUserId()
     {
-        return $this->user_id;
+        return $this->userId;
     }
 
     /**
-     * @param mixed $user_id
+     * @param mixed $userId
      */
-    public function setUserId($user_id)
+    public function setUserId($userId)
     {
-        $this->user_id = $user_id;
+        $this->userId = $userId;
     }
 
     /**

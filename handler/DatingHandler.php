@@ -41,12 +41,21 @@ class datingHandler extends  SimpleHandler{
         if(isset($_POST['datingInfo'])){
             $datingInfo=$_POST['datingInfo'];
         }
-        $dating=json_decode($datingInfo);
-        $result=$this->datingData->insertDating($dating);
+        $temp=json_decode($datingInfo);
 
-//        echo $datingInfo;
-//        print_r($dating);
-        echo  $result;
+        $dating = new Dating();
+        $dating->setUserId($temp->userId);
+        $dating->setDesc($temp->desc);
+        $dating->setCost($temp->cost);
+        $dating->setImageUrls($temp->imageUrls);
+        $dating->setTags($temp->tags);
+        $dating->setPostTime($temp->postTime);
+        $dating->setPostAddress($temp->postAddress);
+        $dating->setPhotoTime($temp->photoTime);
+        $dating->setPhotoAddress($temp->photoAddress);
+
+        $result=$this->datingData->insertDating($dating);
+        echo  json_encode($result);
     }
 
     public function updateDating(){

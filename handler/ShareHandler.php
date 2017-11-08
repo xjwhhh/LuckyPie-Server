@@ -46,22 +46,20 @@ class shareHandler extends SimpleHandler
             $shareInfo = $_POST['shareInfo'];
         }
         $temp = json_decode($shareInfo);
-        print_r($temp);
+//        print_r($temp);
+
         $share = new Share();
-        $share->setDesc($temp->desc);
         $share->setUserId($temp->userId);
+        $share->setDesc($temp->desc);
         $share->setImageUrls($temp->imageUrls);
+        $share->setTags($temp->tags);
         $share->setPostTime($temp->postTime);
         $share->setPostAddress($temp->postAddress);
-//        print_r($album);
-//        echo $temp->userId;
+        $share->setForwardShareId($temp->forwardShareId);
 
         $result = $this->shareData->insertShareData($share);
 
-//        echo $datingInfo;
-//        print_r($dating);
-//        echo  $result;
-//        echo json_encode($result);
+        echo json_encode($result);
     }
 
     public function updateShare()
