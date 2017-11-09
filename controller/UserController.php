@@ -7,10 +7,14 @@
  */
 require_once (dirname(__FILE__) . '/../handler/UserHandler.php');
 $option = "";
+
+//echo "345678";
 if(isset($_GET["option"]))
     $option = $_GET["option"];
 if(isset($_POST["option"]))
     $option = $_POST["option"];
+
+//echo $option;
 
 switch ($option){
     case "login":
@@ -24,8 +28,9 @@ switch ($option){
         break;
 
     case "getInfo":
+//        echo "456";
         $userHandler=new UserHandler();
-        $userHandler->getUserInfo("6");//todo
+        $userHandler->getUserInfo();//todo
         break;
 
     case "updateInfo":

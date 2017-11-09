@@ -348,23 +348,23 @@ if (!$db) {
 //echo "Operation done successfully\n";
 //$db->close();
 //
-$sql = <<<EOF
-      INSERT INTO share (userId)
-      VALUES (100);
-
-       INSERT INTO share (userId)
-      VALUES (100);
-
- INSERT INTO share (userId)
-      VALUES (100);
-EOF;
-
-$ret = $db->exec($sql);
-if (!$ret) {
-    echo $db->lastErrorMsg();
-} else {
-    echo "Records created successfully\n";
-}
+//$sql = <<<EOF
+//      INSERT INTO share (userId)
+//      VALUES (100);
+//
+//       INSERT INTO share (userId)
+//      VALUES (100);
+//
+// INSERT INTO share (userId)
+//      VALUES (100);
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Records created successfully\n";
+//}
 
 
 

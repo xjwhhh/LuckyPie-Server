@@ -50,15 +50,23 @@ class UserHandler extends SimpleHandler
     }
 
     //get:id
-    public function getUserInfo($id)
+    public function getUserInfo()
     {
-        $user = new User();
-        $user->setAlbums("2345");
-        $user->setShares("2345");
-        $user->setLikes("2345");
-        $user->setAccount("1");
-        $user->setId("1");
+        if (isset($_GET["id"])) {
+            $id = $_GET["id"];
+        }
+//        echo "5678";
+//        echo $id;
 
+//        $user = new User();
+//        $user->setAlbums("2345");
+//        $user->setShares("2345");
+//        $user->setLikes("2345");
+//        $user->setAccount("1");
+//        $user->setId("1");
+        $userData=new UserData();
+        $user=$userData->selectUserDataById($id);
+//        echo "et6";
         echo json_encode($user);
     }
 

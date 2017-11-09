@@ -9,8 +9,8 @@ RewriteRule ([a-zA-Z])-([0-9])-([0-9])\.html$ index.php?action=$1&id=$2&page=$3
 #user
 RewriteRule ^api/post/user/login$ controller/UserController.php?option=login [nc,qsa]
 RewriteRule ^api/post/user/register$ controller/UserController.php?option=register [nc,qsa]
-RewriteRule ^api/get/user/info/([0-9]+)$ controller/UserController.php?option=getinfo&id=$1 [nc,qsa]
-RewriteRule ^api/post/user/info/([0-9]+)$ controller/UserController.php?option=updateinfo&id=$1 [nc,qsa]
+RewriteRule ^api/get/user/info/([0-9]+)$ controller/UserController.php?option=getInfo&id=$1 [nc,qsa]
+RewriteRule ^api/post/user/info/([0-9]+)$ controller/UserController.php?option=updateInfo&id=$1 [nc,qsa]
 
 #post
 RewriteRule ^api/post/post/dating/upload$ controller/DatingController.php?option=upload [nc,qsa]

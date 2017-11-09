@@ -21,13 +21,20 @@ class UserData
 
     public function insertUserData($account, $password)
     {
+        $account="'".$account."'";
+        $password="'".$password."'";
         $user = new User();
         //查重
         $sql = <<<EOF
-      SELECT * from user where account=$account and password=$password;
+      SELECT * from user where account=$account;
 EOF;
         $result = $this->db->query($sql);
-        if (!$result) {
+        $count=0;
+        while($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $count++;
+        }
+       //无重复数据
+        if ($count==0) {
             //插入
             $authority = 0;
             $sql = <<<EOF
@@ -53,7 +60,29 @@ EOF;
         return $user;
     }
 
-    public function selectUserData($account, $password)
+    public function selectUserDataById($id)
+    {
+        $sql = <<<EOF
+      SELECT * from user where id=$id;
+EOF;
+        $ret = $this->db->query($sql);
+        $user = new User();
+        while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+            $user->setId($row['id']);
+            $user->setAccount($row['account']);
+            $user->setPassword($row['password']);
+            $user->setAuthority($row['authority']);
+            $user->setName($row['name']);
+            $user->setIdentity($row['identity']);
+            $user->setIntroduction($row['identity']);
+            $user->setGender($row['gender']);
+            $user->setTelephone($row['telephone']);
+            $user->setEmail($row['email']);
+        }
+        return $user;
+    }
+
+    public function selectUserData($account,$password)
     {
         $sql = <<<EOF
       SELECT * from user where account=$account and password=$password;
