@@ -28,6 +28,11 @@ switch ($option){
         $datingHandler->deleteDating();
         break;
 
+    case "getUserDating":
+        $datingHandler=new DatingHandler();
+        $datingHandler->getUserDating();
+        break;
+
     case "getFollowDating":
         $datingHandler=new DatingHandler();
         $datingHandler->getFollowingDating();

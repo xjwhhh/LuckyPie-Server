@@ -33,11 +33,11 @@ class DatingData
         $tagArray = $dating->getTags();
 
         //todo 中文乱码问题
-        $description="'".$description."'";
-        $postTime="'".$postTime."'";
+        $description = "'" . $description . "'";
+        $postTime = "'" . $postTime . "'";
         $cost = "'" . $cost . "'";
         $photoAddress = "'" . $photoAddress . "'";
-        $postAddress="'".$postAddress."'";
+        $postAddress = "'" . $postAddress . "'";
         //插入dating
         $sql = <<<EOF
       INSERT INTO dating (userId,description,cost,photoTime,photoAddress,postTime,postAddress)
@@ -115,7 +115,7 @@ EOF;
 
         //插入albumTag
         foreach ($tagArray as $tag) {
-            $tag="'".$tag."'";
+            $tag = "'" . $tag . "'";
             $tagId = -1;
             $tagSql = <<<EOF
 select id from tag where type=$tag;

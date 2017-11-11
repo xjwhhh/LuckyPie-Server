@@ -27,4 +27,9 @@ switch ($option) {
         $albumHandler = new AlbumHandler();
         $albumHandler->deleteAlbum();
         break;
+
+    case "getUserAlbum":
+        $albumHandler = new AlbumHandler();
+        $albumHandler->getUserAlbums();
+        break;
 }

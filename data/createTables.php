@@ -369,13 +369,15 @@ if (!$db) {
 
 
 $sql = <<<EOF
-      SELECT * from share;
+      SELECT * from user;
 EOF;
 
 $ret = $db->query($sql);
 while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-    echo "ID = " . $row['userId'] . "\n";
-    echo "ID = " . $row['id'] . "\n";
+//    echo "userID = " . $row['userId'] . "\n";
+    echo "shareID = " . $row['id'] . "\n";
+    echo "account= " . $row['account'] . "\n";
+    echo "password = " . $row['password'] . "\n";
 //    echo "time = " . $row['uploadTime'] . "\n";
 //    echo "url = " . $row['url'] . "\n";
 }

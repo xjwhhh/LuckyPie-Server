@@ -37,7 +37,11 @@ class shareHandler extends SimpleHandler
     }
 
     public function getUserShares(){
-
+        if (isset($_GET["userId"])) {
+            $userId = $_GET["userId"];
+        }
+        $result=$this->shareData->selectSharesDataByUserId($userId);
+        echo json_encode($result);
     }
 
     public function addShare()
@@ -46,7 +50,6 @@ class shareHandler extends SimpleHandler
             $shareInfo = $_POST['shareInfo'];
         }
         $temp = json_decode($shareInfo);
-//        print_r($temp);
 
         $share = new Share();
         $share->setUserId($temp->userId);

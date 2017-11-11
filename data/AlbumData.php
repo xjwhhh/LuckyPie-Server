@@ -73,9 +73,9 @@ EOF;
         $createTime = $album->getCreateTime();
         $updateTime = $album->getUpdateTime();
 
-        $description="'".$description."'";
-        $createTime="'".$createTime."'";
-        $updateTime="'".$updateTime."'";
+        $description = "'" . $description . "'";
+        $createTime = "'" . $createTime . "'";
+        $updateTime = "'" . $updateTime . "'";
 
 
         //插入album
@@ -154,7 +154,7 @@ EOF;
 
         //插入albumTag
         foreach ($tagArray as $tag) {
-            $tag="'".$tag."'";
+            $tag = "'" . $tag . "'";
             $tagId = -1;
             $tagSql = <<<EOF
 select id from tag where type=$tag;
@@ -196,6 +196,26 @@ EOF;
         } else {
             return "success";
         }
+    }
+
+    public function getUserAlbumByUserId($userId)
+    {
+        $albumArray = array();
+        $sql = <<<EOF
+      SELECT * from album where userId=$userId;
+EOF;
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $album = new Album();
+            $album->setId($row['id']);
+            $album->setUserId($row['userId']);
+            $album->setName($row['name']);
+            $album->setDesc($row['description']);
+            $album->setCreateTime($row['createTime']);
+            $album->setUpdateTime($row['updateTime']);
+            array_push($albumArray, $album);
+        }
+        return $albumArray;
     }
 
 

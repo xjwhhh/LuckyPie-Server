@@ -28,6 +28,10 @@ switch ($option) {
         $shareHandler->deleteShare();
         break;
 
+    case "getUserShare":
+        $shareHandler = new ShareHandler();
+        $shareHandler->getUserShares();
+
     case "getFollowShare":
         $shareHandler = new ShareHandler();
         $shareHandler->getFollowingShares();

@@ -27,7 +27,7 @@ switch ($option){
         $userHandler->register();
         break;
 
-    case "getInfo":
+    case "getBasicInfo":
 //        echo "456";
         $userHandler=new UserHandler();
         $userHandler->getUserInfo();//todo

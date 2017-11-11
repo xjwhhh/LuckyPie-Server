@@ -6,13 +6,14 @@
  * Time: 20:41
  */
 
-require_once ("SimpleHandler.php");
+require_once("SimpleHandler.php");
 require_once(dirname(__FILE__) . '/../data/DatingData.php');
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Methods:POST');
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
-class datingHandler extends  SimpleHandler{
+class datingHandler extends SimpleHandler
+{
 
     private $datingData;
 
@@ -21,27 +22,37 @@ class datingHandler extends  SimpleHandler{
         $this->datingData = new DatingData();
     }
 
-    public function getHotDating(){
+    public function getHotDating()
+    {
 
     }
 
-    public function getFollowingDating(){
+    public function getFollowingDating()
+    {
 
     }
 
-    public function getExploreDating(){
+    public function getExploreDating()
+    {
 
     }
 
-    public function getUserDating(){
-
-    }
-
-    public function addDating(){
-        if(isset($_POST['datingInfo'])){
-            $datingInfo=$_POST['datingInfo'];
+    public function getUserDating()
+    {
+        if (isset($_GET["userId"])) {
+            $userId = $_GET["userId"];
         }
-        $temp=json_decode($datingInfo);
+        $result = $this->datingData->selectDatingDataByUserId($userId);
+        echo json_encode($result);
+
+    }
+
+    public function addDating()
+    {
+        if (isset($_POST['datingInfo'])) {
+            $datingInfo = $_POST['datingInfo'];
+        }
+        $temp = json_decode($datingInfo);
 
         $dating = new Dating();
         $dating->setUserId($temp->userId);
@@ -54,15 +65,17 @@ class datingHandler extends  SimpleHandler{
         $dating->setPhotoTime($temp->photoTime);
         $dating->setPhotoAddress($temp->photoAddress);
 
-        $result=$this->datingData->insertDating($dating);
-        echo  json_encode($result);
+        $result = $this->datingData->insertDating($dating);
+        echo json_encode($result);
     }
 
-    public function updateDating(){
+    public function updateDating()
+    {
 
     }
 
-    public function deleteDating(){
+    public function deleteDating()
+    {
 
     }
 
