@@ -55,23 +55,35 @@ class UserHandler extends SimpleHandler
         if (isset($_GET["id"])) {
             $id = $_GET["id"];
         }
-//        echo "5678";
-//        echo $id;
-
-//        $user = new User();
-//        $user->setAlbums("2345");
-//        $user->setShares("2345");
-//        $user->setLikes("2345");
-//        $user->setAccount("1");
-//        $user->setId("1");
-        $userData=new UserData();
-        $user=$userData->selectUserDataById($id);
-//        echo "et6";
+        $userData = new UserData();
+        $user = $userData->selectUserDataById($id);
         echo json_encode($user);
     }
 
     public function updateUserInfo()
     {
+        if (isset($_POST["userId"])) {
+            $userId = $_POST["userId"];
+        }
+        if (isset($_POST["name"])) {
+            $name = $_POST["name"];
+        }
+        if (isset($_POST["gender"])) {
+            $gender = $_POST["gender"];
+        }
+        if (isset($_POST["identity"])) {
+            $identity = $_POST["identity"];
+        }
+        if (isset($_POST["telephone"])) {
+            $telephone = $_POST["telephone"];
+        }
+        if (isset($_POST["email"])) {
+            $email = $_POST["email"];
+        }
+
+        $userData = new UserData();
+        $user = $userData->updateUserBasicInfo($userId, $name, $gender, $identity, $telephone, $email);
+        echo $user;
 
     }
 

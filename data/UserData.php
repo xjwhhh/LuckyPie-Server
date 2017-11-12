@@ -38,8 +38,8 @@ EOF;
             //插入
             $authority = 0;
             $sql = <<<EOF
-      INSERT INTO USER (account,password,authority)
-      VALUES ($account,$password,$authority);
+      INSERT INTO USER (account,password,name,authority)
+      VALUES ($account,$password,"乐拍成员",$authority);
 EOF;
             $ret = $this->db->exec($sql);
             //填充数据
@@ -105,19 +105,25 @@ EOF;
     }
 
     //todo 如何知道要更新的是哪些内容->全部更新
-    public function updateUserData($user)
+    public function updateUserBasicInfo($userId,$name,$gender,$identity,$telephone,$email)
     {
-        $sql = <<<EOF
-      UPDATE user set password=$user->getPasswor(),name=$user->getName(),identity=$user->getIdentity(),
-      introduction=$user->getIntroduction(),gender=$user->getGender(),telephone=$user->getTelephone(),email=$user->getEmail()
-      where id=$user->getId();
-EOF;
-        $ret = $this->db->exec($sql);
-        if ($ret) {
-            return $user;
-        } else {
-            return new User();
-        }
+//        $userId="'".$userId."'";
+//        $name="'".$name."'";
+//        $gender="'".$name."'";
+//        $identity="'".$name."'";
+//        $telephone="'".$name."'";
+//        $email="'".$name."'";
+//        $sql = <<<EOF
+//      UPDATE user set gender=$gender
+//      where id=$userId;
+//EOF;
+//        $ret = $this->db->exec($sql);
+        return "1";
+//        if ($ret) {
+//            return $user;
+//        } else {
+//            return new User();
+//        }
     }
 
     public function selectHotPhotographer()
