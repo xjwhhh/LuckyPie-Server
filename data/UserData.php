@@ -21,20 +21,20 @@ class UserData
 
     public function insertUserData($account, $password)
     {
-        $account="'".$account."'";
-        $password="'".$password."'";
+        $account = "'" . $account . "'";
+        $password = "'" . $password . "'";
         $user = new User();
         //查重
         $sql = <<<EOF
       SELECT * from user where account=$account;
 EOF;
         $result = $this->db->query($sql);
-        $count=0;
-        while($row = $result->fetchArray(SQLITE3_ASSOC)){
+        $count = 0;
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             $count++;
         }
-       //无重复数据
-        if ($count==0) {
+        //无重复数据
+        if ($count == 0) {
             //插入
             $authority = 0;
             $sql = <<<EOF
@@ -74,15 +74,23 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            $user->setIntroduction($row['introduction']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
         }
         return $user;
     }
 
-    public function selectUserData($account,$password)
+    public function selectUserData($account, $password)
     {
         $sql = <<<EOF
       SELECT * from user where account=$account and password=$password;
@@ -98,32 +106,70 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
         }
         return $user;
     }
 
     //todo 如何知道要更新的是哪些内容->全部更新
-    public function updateUserBasicInfo($userId,$name,$gender,$identity,$telephone,$email)
+    public function updateUserBasicInfo($userId, $name, $introduction, $gender, $identity, $telephone, $email)
     {
-//        $userId="'".$userId."'";
-//        $name="'".$name."'";
-//        $gender="'".$name."'";
-//        $identity="'".$name."'";
-//        $telephone="'".$name."'";
-//        $email="'".$name."'";
-//        $sql = <<<EOF
-//      UPDATE user set gender=$gender
-//      where id=$userId;
-//EOF;
-//        $ret = $this->db->exec($sql);
-        return "1";
-//        if ($ret) {
-//            return $user;
-//        } else {
-//            return new User();
-//        }
+
+        $user = new User();
+        if ($introduction == null) {
+            $introduction = "他很懒哦，暂无自我介绍";
+        }
+        if ($telephone == null) {
+            $telephone = "-1";
+        }
+        if ($email == null) {
+            $email = "-1";
+        }
+
+        //更新失败的原因是null
+        $name = "'" . $name . "'";
+        $introduction = "'" . $introduction . "'";
+        $gender = "'" . $gender . "'";
+        $identity = "'" . $identity . "'";
+        $telephone = "'" . $telephone . "'";
+        $email = "'" . $email . "'";
+
+        //查重
+        $sql = <<<EOF
+      SELECT * from user where name=$name;
+EOF;
+        $result = $this->db->query($sql);
+        $count = 0;
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            if ($row['id'] != $userId) {
+                $count++;
+            }
+        }
+        if ($count > 0) {
+            return new User();
+        }
+
+        //无重复
+        $sql = <<<EOF
+      UPDATE user set name=$name,introduction=$introduction,gender=$gender,identity=$identity,telephone=$telephone,email=$email
+      where id=$userId;
+EOF;
+        $ret = $this->db->exec($sql);
+        if ($ret) {
+            $user->setId($userId);
+            return $user;
+        } else {
+            return new User();
+        }
     }
 
     public function selectHotPhotographer()
@@ -150,8 +196,16 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
             array_push($userArray, $user);
         }
         return $userArray;
@@ -182,8 +236,16 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
             array_push($userArray, $user);
         }
         return $userArray;
@@ -212,8 +274,16 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
             array_push($userArray, $user);
         }
         return $userArray;
@@ -243,8 +313,16 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
             array_push($userArray, $user);
         }
         return $userArray;
@@ -274,8 +352,16 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
             array_push($userArray, $user);
         }
         return $userArray;
@@ -304,8 +390,16 @@ EOF;
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['identity']);
             $user->setGender($row['gender']);
-            $user->setTelephone($row['telephone']);
-            $user->setEmail($row['email']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
             array_push($userArray, $user);
         }
         return $userArray;

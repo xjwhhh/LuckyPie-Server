@@ -68,6 +68,9 @@ class UserHandler extends SimpleHandler
         if (isset($_POST["name"])) {
             $name = $_POST["name"];
         }
+        if (isset($_POST["introduction"])) {
+            $introduction = $_POST["introduction"];
+        }
         if (isset($_POST["gender"])) {
             $gender = $_POST["gender"];
         }
@@ -82,8 +85,8 @@ class UserHandler extends SimpleHandler
         }
 
         $userData = new UserData();
-        $user = $userData->updateUserBasicInfo($userId, $name, $gender, $identity, $telephone, $email);
-        echo $user;
+        $user = $userData->updateUserBasicInfo($userId, $name,$introduction, $gender, $identity, $telephone, $email);
+        echo json_encode($user);
 
     }
 

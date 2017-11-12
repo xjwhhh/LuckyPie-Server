@@ -80,6 +80,7 @@ EOF;
             $now = date("Y-m-d H:i:s", time());
             $now = "'" . $now . "'";
             $new_file = "'" . $new_file . "'";
+//            $base64Code="'".$base64Code."'";
             $photoSql = <<<EOF
 insert into photo (uploadTime,url) values($now,$new_file);
 EOF;
