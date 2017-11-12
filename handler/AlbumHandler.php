@@ -57,8 +57,8 @@ class albumHandler extends SimpleHandler
     }
 
     public function getUserAlbums(){
-        if (isset($_GET["userId"])) {
-            $userId = $_GET["userId"];
+        if (isset($_GET["id"])) {
+            $userId = $_GET["id"];
         }
         $result=$this->albumData->getUserAlbumByUserId($userId);
         echo json_encode($result);

@@ -39,8 +39,8 @@ class datingHandler extends SimpleHandler
 
     public function getUserDating()
     {
-        if (isset($_GET["userId"])) {
-            $userId = $_GET["userId"];
+        if (isset($_GET["id"])) {
+            $userId = $_GET["id"];
         }
         $result = $this->datingData->selectDatingDataByUserId($userId);
         echo json_encode($result);

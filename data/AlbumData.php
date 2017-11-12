@@ -20,39 +20,42 @@ class AlbumData
 
     //对album的操作涉及三个表,album,albumPhoto,albumTag
 
-    public function selectAlbumData($userId)
+    public function getUserAlbumByUserId($userId)
     {
         $albumArray = array();
         $sql = <<<EOF
       SELECT * from album where userId=$userId;
 EOF;
         $res = $this->db->query($sql);
+        $albumId=-1;
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             $album = new Album();
             $album->setId($row['id']);
             $album->setUserId($row['userId']);
-            $album->setName($row['name']);
+            $album->setName($row['title']);
             $album->setDesc($row['description']);
             $album->setCreateTime($row['createTime']);
             $album->setUpdateTime($row['updateTime']);
+
+            $albumId=$album->getId();
             //获取photo
             $photoArray = array();
             $photoSql = <<<EOF
-      SELECT photo.url from albumPhoto,photo where albumPhoto.albumId=$album->getId() and photo.id=albumPhoto.photoId;
+      SELECT photo.url from albumPhoto,photo where albumPhoto.albumId=$albumId and photo.id=albumPhoto.photoId;
 EOF;
             $photoRes = $this->db->query($photoSql);
             while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
                 array_push($photoArray, $photoRow['url']);
             }
             $album->setImageUrls($photoArray);
-            //获取tag
+            //获取tag todo 不匹配
             $tagArray = array();
             $tagSql = <<<EOF
-      SELECT tag.name from albumTag,tag where albumTag.albumId=$album->getId() and tag.id=albumTag.tagId;
+      SELECT tag.type from albumTag,tag where albumTag.albumId=$albumId and tag.id=albumTag.tagId;
 EOF;
             $tagRes = $this->db->query($tagSql);
             while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-                array_push($tagArray, $tagRow['name']);
+                array_push($tagArray, $tagRow['type']);
             }
             $album->setTags($tagArray);
             array_push($albumArray, $album);
@@ -197,26 +200,26 @@ EOF;
             return "success";
         }
     }
-
-    public function getUserAlbumByUserId($userId)
-    {
-        $albumArray = array();
-        $sql = <<<EOF
-      SELECT * from album where userId=$userId;
-EOF;
-        $res = $this->db->query($sql);
-        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-            $album = new Album();
-            $album->setId($row['id']);
-            $album->setUserId($row['userId']);
-            $album->setName($row['name']);
-            $album->setDesc($row['description']);
-            $album->setCreateTime($row['createTime']);
-            $album->setUpdateTime($row['updateTime']);
-            array_push($albumArray, $album);
-        }
-        return $albumArray;
-    }
+//
+//    public function getUserAlbumByUserId($userId)
+//    {
+//        $albumArray = array();
+//        $sql = <<<EOF
+//      SELECT * from album where userId=$userId;
+//EOF;
+//        $res = $this->db->query($sql);
+//        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+//            $album = new Album();
+//            $album->setId($row['id']);
+//            $album->setUserId($row['userId']);
+//            $album->setName($row['title']);
+//            $album->setDesc($row['description']);
+//            $album->setCreateTime($row['createTime']);
+//            $album->setUpdateTime($row['updateTime']);
+//            array_push($albumArray, $album);
+//        }
+//        return $albumArray;
+//    }
 
 
 }
