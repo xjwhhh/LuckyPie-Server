@@ -66,6 +66,7 @@ EOF;
 
         $urlArray = array();//返回的imageURL
         //插入sharePhoto
+        $diff = 0;
         foreach ($photoArray as $base64Code) {
             $photoId = 0;
             //todo 将照片base64解码,但保存之后是损坏的，需要解决
@@ -78,7 +79,9 @@ EOF;
 //检查是否有该文件夹，如果没有就创建，并给予最高权限
                 mkdir($new_file, 0700);
             }
-            $new_file = $new_file . time() . ".{$type}";
+            $new_file = $new_file . time() . $diff . ".{$type}";
+            $diff = $diff + 1;
+            $base64Code = str_replace(" ", "+", $base64Code);
             file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64Code)));
             $now = date("Y-m-d H:i:s", time());
             $now = "'" . $now . "'";

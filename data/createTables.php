@@ -138,11 +138,11 @@ if (!$db) {
 //}
 //$db->close();
 
-////create table datePhoto
+////create table datingPhoto
 //$sql= <<<EOF
-//      CREATE TABLE datePhoto
+//      CREATE TABLE datingPhoto
 //      (photoId int not null,
-//      dateId int not null
+//      datingId int not null
 //      );
 //EOF;
 //
@@ -368,22 +368,22 @@ if (!$db) {
 
 
 
-$sql = <<<EOF
-      SELECT * from user;
-EOF;
-
-$ret = $db->query($sql);
-while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-//    echo "userID = " . $row['userId'] . "\n";
-    echo "shareID = " . $row['id'] . "\n";
-    echo "account= " . $row['account'] . "\n";
-    echo "password = " . $row['password'] . "\n";
-//    echo "time = " . $row['uploadTime'] . "\n";
-//    echo "url = " . $row['url'] . "\n";
-}
-echo "Operation done successfully\n";
-//todo 数据库记录消失
-$db->close();
+//$sql = <<<EOF
+//      SELECT * from user;
+//EOF;
+//
+//$ret = $db->query($sql);
+//while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+////    echo "userID = " . $row['userId'] . "\n";
+//    echo "shareID = " . $row['id'] . "\n";
+//    echo "account= " . $row['account'] . "\n";
+//    echo "password = " . $row['password'] . "\n";
+////    echo "time = " . $row['uploadTime'] . "\n";
+////    echo "url = " . $row['url'] . "\n";
+//}
+//echo "Operation done successfully\n";
+////todo 数据库记录消失
+//$db->close();
 
 
 //$sql = <<<EOF
