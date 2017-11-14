@@ -176,15 +176,19 @@ EOF;
     {
         $userArray = array();
         //todo 点赞最多的一千个摄影师，随机选一百个展现
-        $sql = <<<EOF
-      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
-       from user,thumb 
-       where identity="摄影师" and user.id=thumb.userId
-       group by user.id
-       order by num
-       limit 1000
-       ;
+//        $sql = <<<EOF
+//      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
+//       from user,thumb
+//       where identity="摄影师" and user.id=thumb.userId
+//       group by user.id
+//       order by num
+//       limit 1000
+//       ;
+//EOF;
+        $sql=<<<EOF
+select * from user where IDENTITY ="摄影师";
 EOF;
+
         $ret = $this->db->query($sql);
         while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
             $user = new User();
@@ -403,6 +407,16 @@ EOF;
             array_push($userArray, $user);
         }
         return $userArray;
+    }
+
+    public function follow($followId,$followerId){
+//        echo "success";
+        $sql=<<<EOF
+insert into follow(followId,followerId,groupId) values($followId,$followerId,-1);
+EOF;
+        $ret = $this->db->exec($sql);
+//        print_r($ret);
+
     }
 }
 

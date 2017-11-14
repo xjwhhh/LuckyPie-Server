@@ -29,6 +29,14 @@ class shareHandler extends SimpleHandler
     public function getFollowingShares()
     {
 
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        //todo groupName
+        $groupName="全部";
+        $result=$this->shareData->selectFollowingSharesByUserId($userId,$groupName);
+        echo json_encode($result);
+
     }
 
     public function getExploreShares()

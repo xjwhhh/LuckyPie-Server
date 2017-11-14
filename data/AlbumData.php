@@ -113,31 +113,36 @@ EOF;
         $diff = 0;
         foreach ($photoArray as $base64Code) {
             $photoId = 0;
-            //todo 将照片base64解码,但保存之后是损坏的，需要解决
             //不查看照片是否已经上传过
             //上传至服务器
             preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64Code, $result);
             $type = $result[2];
-            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" . date('Ymd', time()) . "/";
+            $catalog=date('Ymd', time()) . "/";
+            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" .$catalog ;
+            $http_file="http://localhost/LuckyPie-Server/photo/".$catalog;
             if (!file_exists($new_file)) {
 //检查是否有该文件夹，如果没有就创建，并给予最高权限
                 mkdir($new_file, 0700);
             }
-            $new_file = $new_file . time() . $diff . ".{$type}";
-            $diff = $diff + 1;
+            $time=time();
+            $new_file = $new_file . $time .$diff. ".{$type}";
+            $http_file = $http_file . $time .$diff. ".{$type}";
+            $diff=$diff+1;
             $base64Code = str_replace(" ", "+", $base64Code);
-            file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64Code)));
-            $now = date("Y-m-d H:i:s", time());
+            $tt=str_replace($result[1], '', $base64Code);
+            $ll=base64_decode($tt);
+            file_put_contents($new_file, $ll);
+            $now = date("Y-m-d H:i:s.u", time());
             $now = "'" . $now . "'";
-            $new_file = "'" . $new_file . "'";
+            $http_file = "'" . $http_file . "'";
             $photoSql = <<<EOF
-insert into photo (uploadTime,url) values($now,$new_file);
+insert into photo (uploadTime,url) values($now,$http_file);
 EOF;
             $photoRes = $this->db->exec($photoSql);
             //插入photo成功
             if ($photoRes) {
                 $photoSql = <<<EOF
-select * from photo where uploadTime=$now and url=$new_file;
+select * from photo where uploadTime=$now and url=$http_file;
 EOF;
                 $photoRes = $this->db->query($photoSql);
                 //返回图片在服务器存储的位置
@@ -180,7 +185,7 @@ EOF;
 
         }
         $returnAlbum->setTags($tagArray);
-        print_r($returnAlbum);
+//        print_r($returnAlbum);
         return $returnAlbum;
     }
 

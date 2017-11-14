@@ -55,8 +55,8 @@ class UserHandler extends SimpleHandler
         if (isset($_GET["id"])) {
             $id = $_GET["id"];
         }
-        $userData = new UserData();
-        $user = $userData->selectUserDataById($id);
+//        $userData = new UserData();
+        $user = $this->userData->selectUserDataById($id);
         echo json_encode($user);
     }
 
@@ -84,14 +84,18 @@ class UserHandler extends SimpleHandler
             $email = $_POST["email"];
         }
 
-        $userData = new UserData();
-        $user = $userData->updateUserBasicInfo($userId, $name,$introduction, $gender, $identity, $telephone, $email);
+//        $userData = new UserData();
+        $user = $this->userData->updateUserBasicInfo($userId, $name,$introduction, $gender, $identity, $telephone, $email);
         echo json_encode($user);
 
     }
 
     public function getExploreHotPhotographer()
     {
+//        $userData=new UserData();
+        $result=$this->userData->selectHotPhotographer();
+//        echo "ert";
+        echo json_encode($result);
 
     }
 
@@ -120,6 +124,18 @@ class UserHandler extends SimpleHandler
     public function getExploreNewModel()
     {
 
+    }
+
+    public function follow(){
+//        echo "rty";
+        if (isset($_POST["followId"])) {
+            $followId = $_POST["followId"];
+        }
+        if (isset($_POST["followerId"])) {
+            $followerId= $_POST["followerId"];
+        }
+        $userData=new UserData();
+        $userData->follow($followId,$followerId);
     }
 
 
