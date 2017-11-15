@@ -83,5 +83,35 @@ class shareHandler extends SimpleHandler
 
     }
 
+    public function doThumb(){
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        if (isset($_POST['shareId'])) {
+            $shareId = $_POST['shareId'];
+        }
+
+        $result=$this->shareData->insertThumb($userId,$shareId);
+    }
+
+    public function cancelThumb(){
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        if (isset($_POST['shareId'])) {
+            $shareId = $_POST['shareId'];
+        }
+
+        $result=$this->shareData->cancelThumb($userId,$shareId);
+    }
+
+    public function getUserLikes(){
+        if (isset($_GET["id"])) {
+            $userId = $_GET["id"];
+        }
+        $result=$this->shareData->getUserLikes($userId);
+        echo json_encode($result);
+    }
+
 
 }

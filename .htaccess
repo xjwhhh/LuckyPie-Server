@@ -14,7 +14,7 @@ RewriteRule ^api/post/user/info$ controller/UserController.php?option=updateInfo
 RewriteRule ^api/get/user/info/share/([0-9]+)$ controller/ShareController.php?option=getUserShare&id=$1 [nc,qsa]
 RewriteRule ^api/get/user/info/album/([0-9]+)$ controller/AlbumController.php?option=getUserAlbum&id=$1 [nc,qsa]
 RewriteRule ^api/get/user/info/dating/([0-9]+)$ controller/DatingController.php?option=getUserDating&id=$1 [nc,qsa]
-RewriteRule ^api/get/user/info/like/([0-9]+)$ controller/UserController.php?option=getUserLike&id=$1 [nc,qsa]
+RewriteRule ^api/get/user/info/like/([0-9]+)$ controller/ShareController.php?option=getUserLike&id=$1 [nc,qsa]
 
 #post
 RewriteRule ^api/post/post/dating/upload$ controller/DatingController.php?option=upload [nc,qsa]
@@ -51,5 +51,7 @@ RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShare
 
 
 RewriteRule ^api/post/follow$ controller/UserController.php?option=follow [nc,qsa]
+RewriteRule ^api/post/share/doThumb$ controller/ShareController.php?option=doThumb [nc,qsa]
+RewriteRule ^api/post/share/cancelThumb$ controller/ShareController.php?option=cancelThumb [nc,qsa]
 
 

@@ -220,7 +220,7 @@ if (!$db) {
 //}
 //$db->close();
 
-////create table thumb
+//create table thumb
 //$sql= <<<EOF
 //      CREATE TABLE thumb
 //      (userId int not null,

@@ -30,9 +30,9 @@ class ShareData
         $postAddress = $share->getPostAddress();
         $forwardShareId = $share->getForwardShareId();
 
-        $description="'".$description."'";
-        $postTime="'".$postTime."'";
-        $postAddress="'".$postAddress."'";
+        $description = "'" . $description . "'";
+        $postTime = "'" . $postTime . "'";
+        $postAddress = "'" . $postAddress . "'";
 
         //插入share
         $sql = <<<EOF
@@ -61,27 +61,27 @@ EOF;
         $shareId = $returnShare->getId();
         $urlArray = array();//返回的imageURL
         //插入sharePhoto
-        $diff=0;
+        $diff = 0;
         foreach ($photoArray as $base64Code) {
             $photoId = 0;
             //不查看照片是否已经上传过
             //上传至服务器
             preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64Code, $result);
             $type = $result[2];
-            $catalog=date('Ymd', time()) . "/";
-            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" .$catalog ;
-            $http_file="http://localhost/LuckyPie-Server/photo/".$catalog;
+            $catalog = date('Ymd', time()) . "/";
+            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" . $catalog;
+            $http_file = "http://localhost/LuckyPie-Server/photo/" . $catalog;
             if (!file_exists($new_file)) {
 //检查是否有该文件夹，如果没有就创建，并给予最高权限
                 mkdir($new_file, 0700);
             }
-            $time=time();
-            $new_file = $new_file . $time .$diff. ".{$type}";
-            $http_file = $http_file . $time .$diff. ".{$type}";
-            $diff=$diff+1;
+            $time = time();
+            $new_file = $new_file . $time . $diff . ".{$type}";
+            $http_file = $http_file . $time . $diff . ".{$type}";
+            $diff = $diff + 1;
             $base64Code = str_replace(" ", "+", $base64Code);
-            $tt=str_replace($result[1], '', $base64Code);
-            $ll=base64_decode($tt);
+            $tt = str_replace($result[1], '', $base64Code);
+            $ll = base64_decode($tt);
             file_put_contents($new_file, $ll);
             $now = date("Y-m-d H:i:s.u", time());
             $now = "'" . $now . "'";
@@ -117,7 +117,7 @@ EOF;
 
         //插入albumTag
         foreach ($tagArray as $tag) {
-            $tag="'".$tag."'";
+            $tag = "'" . $tag . "'";
             $tagId = -1;
             $tagSql = <<<EOF
 select id from tag where type=$tag;
@@ -202,6 +202,8 @@ EOF;
             array_push($shareArray, $share);
 
         }
+
+//        echo "e45";
         return $shareArray;
 
     }
@@ -276,7 +278,7 @@ EOF;
 //        $sql = <<<EOF
 //      SELECT f.followId from follow f,followGroup fg where fg.userId=$userId and fg.groupName=$groupName and f.gruopId=fg.groupId;
 //EOF;
-        $sql=<<<EOF
+        $sql = <<<EOF
 select followId from follow where followerId=$userId;
 EOF;
 
@@ -285,7 +287,7 @@ EOF;
             array_push($followIdArray, $row['followId']);
         }
 //        print_r($followIdArray);
-        $followIdArray=array_unique($followIdArray);
+        $followIdArray = array_unique($followIdArray);
         //获取关注用户的分享
         $shareArray = array();
         foreach ($followIdArray as $followId) {
@@ -295,5 +297,79 @@ EOF;
 //        print_r($shareArray);
         return $shareArray;
         //todo 按时间排序
+    }
+
+    public function insertThumb($userId, $shareId)
+    {
+        $sql = <<<EOF
+insert into thumb (userId,shareId) values ($userId,$shareId);
+EOF;
+        $res = $this->db->exec($sql);
+//        if($res) {
+//            echo "rsuccess";
+//        }
+    }
+
+    public function cancelThumb($userId, $shareId)
+    {
+        $sql = <<<EOF
+update thumb set userId=-1,shareId=-1 where userId=$userId and shareId=$shareId;
+EOF;
+        $res = $this->db->exec($sql);
+        if ($res) {
+            echo "rsuccess";
+        }
+    }
+
+    public function getUserLikes($userId)
+    {
+        $shareIdArray = Array();
+        $sql = <<<EOF
+select shareId from thumb where userId=$userId;
+EOF;
+        $res = $this->db->query($sql);
+
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            array_push($shareIdArray, $row['shareId']);
+        }
+        $shareIdArray = array_unique($shareIdArray);
+        $shareArray = array();
+        foreach ($shareIdArray as $shareId) {
+            $sql = <<<EOF
+      SELECT * from share where id=$shareId;
+EOF;
+            $res = $this->db->query($sql);
+            $share = new Share();
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $share->setId($row['id']);
+                $share->setUserId($row['userId']);
+                $share->setDesc($row['description']);
+                $share->setPostTime($row['postTime']);
+                $share->setPostAddress($row['postAddress']);
+                $share->setForwardShareId($row['forwardShareId']);
+                //获取photo
+                $photoArray = array();
+                $photoSql = <<<EOF
+      SELECT photo.url from sharePhoto,photo where sharePhoto.shareId=$shareId and photo.id=sharePhoto.photoId;
+EOF;
+                $photoRes = $this->db->query($photoSql);
+                while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($photoArray, $photoRow['url']);
+                }
+                $share->setImageUrls($photoArray);
+                //获取tag todo 不匹配
+                $tagArray = array();
+                $tagSql = <<<EOF
+      SELECT tag.type from shareTag,tag where shareTag.shareId=$shareId and tag.id=shareTag.tagId;
+EOF;
+                $tagRes = $this->db->query($tagSql);
+                while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($tagArray, $tagRow['type']);
+                }
+                $share->setTags($tagArray);
+            }
+            array_push($shareArray, $share);
+        }
+        return $shareArray;
     }
 }

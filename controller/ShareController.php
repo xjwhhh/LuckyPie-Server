@@ -12,38 +12,47 @@ if (isset($_GET["option"]))
 if (isset($_POST["option"]))
     $option = $_POST["option"];
 
+$shareHandler = new ShareHandler();
+
 switch ($option) {
     case "upload":
-        $shareHandler = new ShareHandler();
         $shareHandler->addShare();
         break;
 
     case "update":
-        $shareHandler = new ShareHandler();
         $shareHandler->updateShare();
         break;
 
     case "delete":
-        $shareHandler = new ShareHandler();
         $shareHandler->deleteShare();
         break;
 
     case "getUserShare":
-        $shareHandler = new ShareHandler();
         $shareHandler->getUserShares();
+        break;
 
     case "getFollowShare":
-        $shareHandler = new ShareHandler();
         $shareHandler->getFollowingShares();
         break;
 
     case "getExploreShare":
-        $shareHandler = new ShareHandler();
         $shareHandler->getExploreShares();
         break;
 
     case "getHotShare":
-        $shareHandler = new ShareHandler();
         $shareHandler->getHotShares();
         break;
+
+    case "doThumb":
+        $shareHandler->doThumb();
+        break;
+
+    case "cancelThumb":
+        $shareHandler->cancelThumb();
+        break;
+
+    case "getUserLike":
+        $shareHandler->getUserLikes();
+        break;
+
 }
