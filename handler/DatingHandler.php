@@ -34,6 +34,20 @@ class datingHandler extends SimpleHandler
 
     public function getExploreDating()
     {
+        if (isset($_POST['address'])) {
+            $address = $_POST['address'];
+        }
+        if (isset($_POST['cost'])) {
+            $cost = $_POST['cost'];
+        }
+        if (isset($_POST['identity'])) {
+            $identity = $_POST['identity'];
+        }
+        if (isset($_POST['gender'])) {
+            $gender = $_POST['gender'];
+        }
+        $result=$this->datingData->selectExploreDatingByConditions($address,$cost,$identity,$gender);
+        echo json_encode($result);
 
     }
 

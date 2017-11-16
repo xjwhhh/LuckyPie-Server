@@ -73,20 +73,20 @@ EOF;
             //上传至服务器
             preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64Code, $result);
             $type = $result[2];
-            $catalog=date('Ymd', time()) . "/";
-            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" .$catalog ;
-            $http_file="http://localhost/LuckyPie-Server/photo/".$catalog;
+            $catalog = date('Ymd', time()) . "/";
+            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" . $catalog;
+            $http_file = "http://localhost/LuckyPie-Server/photo/" . $catalog;
             if (!file_exists($new_file)) {
 //检查是否有该文件夹，如果没有就创建，并给予最高权限
                 mkdir($new_file, 0700);
             }
-            $time=time();
-            $new_file = $new_file . $time .$diff. ".{$type}";
-            $http_file = $http_file . $time .$diff. ".{$type}";
-            $diff=$diff+1;
+            $time = time();
+            $new_file = $new_file . $time . $diff . ".{$type}";
+            $http_file = $http_file . $time . $diff . ".{$type}";
+            $diff = $diff + 1;
             $base64Code = str_replace(" ", "+", $base64Code);
-            $tt=str_replace($result[1], '', $base64Code);
-            $ll=base64_decode($tt);
+            $tt = str_replace($result[1], '', $base64Code);
+            $ll = base64_decode($tt);
             file_put_contents($new_file, $ll);
             $now = date("Y-m-d H:i:s.u", time());
             $now = "'" . $now . "'";
@@ -121,7 +121,7 @@ EOF;
         }
         $returnDating->setImageUrls($urlArray);
 
-        //插入albumTag
+        //插入datingTag
         foreach ($tagArray as $tag) {
             $tag = "'" . $tag . "'";
             $tagId = -1;
@@ -132,12 +132,12 @@ EOF;
             while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
                 $tagId = $tagRow['id'];
             }
-            $albumTagSql = <<<EOF
-insert into albumTag values ($datingId,$tagId);
+            $datingTagSql = <<<EOF
+insert into datingTag values ($datingId,$tagId);
 EOF;
-            $albumTagRes = $this->db > exec($albumTagSql);
-            if (!$albumTagRes) {
-                return new Album();
+            $datingTagRes = $this->db > exec($datingTagSql);
+            if (!$datingTagRes) {
+                return new Dating();
             }
 
         }
@@ -183,6 +183,29 @@ EOF;
             $dating->setPostTime($row['postTime']);
             $dating->setPhotoAddress($row['photoAddress']);
             $dating->setPostAddress($row['postAddress']);
+
+            $datingId=$dating->getId();
+            //获取photo
+            $photoArray = array();
+            $photoSql = <<<EOF
+      SELECT photo.url from datingPhoto,photo where datingPhoto.shareId=$datingId and photo.id=datingPhoto.photoId;
+EOF;
+            $photoRes = $this->db->query($photoSql);
+            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+                array_push($photoArray, $photoRow['url']);
+            }
+            $dating->setImageUrls($photoArray);
+            //获取tag todo 不匹配
+            $tagArray = array();
+            $tagSql = <<<EOF
+      SELECT tag.type from datingTag,tag where datingTag.shareId=$datingId and tag.id=datingTag.tagId;
+EOF;
+            $tagRes = $this->db->query($tagSql);
+            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                array_push($tagArray, $tagRow['type']);
+            }
+            $dating->setTags($tagArray);
+
             array_push($datingArray, $dating);
         }
         return $datingArray;
@@ -195,28 +218,147 @@ EOF;
 
     }
 
-    public function selectExploreDatingByUserId($tagName)
+    public function selectExploreDatingByConditions($address, $cost, $identity, $gender)
     {
-        $datingArray = array();
-        $sql = <<<EOF
-      SELECT s.id,s.userId,s.description,s.cost,s.photoTime,s.photoAddress,s.postTime,s.postAddress
-      from dating s,datingTag st,tag t where st.datingId=s.id and st.tagId=t.id and t.name=$tagName;
+        $datingArrayAddress = array();
+        $datingArrayCost = array();
+        $datingArrayIdentity = array();
+        $datingArrayGender = array();
+//        echo $address;
+//        echo $cost;
+//        echo $identity;
+//        echo $gender;
+        //按地点筛选
+        if ($address != "全部") {
+            $address = "'" . $address . "'";
+            $sql = <<<EOF
+select * from dating where photoAddress=$address;
 EOF;
-        $res = $this->db->query($sql);
-        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-            $dating = new Dating();
-            $dating->setId($row['id']);
-            $dating->setUserId($row['userId']);
-            $dating->setDesc($row['description']);
-            $dating->setCost($row['cost']);
-            $dating->setPhotoTime($row['photoTime']);
-            $dating->setPostTime($row['postTime']);
-            $dating->setPhotoAddress($row['photoAddress']);
-            $dating->setPostAddress($row['postAddress']);
-            array_push($datingArray, $dating);
-        }
-        return $datingArray;
+            $res = $this->db->query($sql);
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $dating = new Dating();
+                $dating->setId($row['id']);
+                $dating->setUserId($row['userId']);
+                $dating->setDesc($row['description']);
+                $dating->setCost($row['cost']);
+                $dating->setPhotoTime($row['photoTime']);
+                $dating->setPostTime($row['postTime']);
+                $dating->setPhotoAddress($row['photoAddress']);
+                $dating->setPostAddress($row['postAddress']);
 
+                $datingId=$dating->getId();
+                //获取photo
+                $photoArray = array();
+                $photoSql = <<<EOF
+      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
+EOF;
+                $photoRes = $this->db->query($photoSql);
+                while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($photoArray, $photoRow['url']);
+                }
+                $dating->setImageUrls($photoArray);
+                //获取tag todo 不匹配
+                $tagArray = array();
+                $tagSql = <<<EOF
+      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
+EOF;
+                $tagRes = $this->db->query($tagSql);
+                while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($tagArray, $tagRow['type']);
+                }
+                $dating->setTags($tagArray);
+
+                array_push($datingArrayAddress, $dating);
+            }
+        } else {
+            $address = "'" . $address . "'";
+            $sql = <<<EOF
+select * from dating;
+EOF;
+            $res = $this->db->query($sql);
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $dating = new Dating();
+                $dating->setId($row['id']);
+                $dating->setUserId($row['userId']);
+                $dating->setDesc($row['description']);
+                $dating->setCost($row['cost']);
+                $dating->setPhotoTime($row['photoTime']);
+                $dating->setPostTime($row['postTime']);
+                $dating->setPhotoAddress($row['photoAddress']);
+                $dating->setPostAddress($row['postAddress']);
+
+                $datingId=$dating->getId();
+                //获取photo
+                $photoArray = array();
+                $photoSql = <<<EOF
+      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
+EOF;
+                $photoRes = $this->db->query($photoSql);
+                while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($photoArray, $photoRow['url']);
+                }
+                $dating->setImageUrls($photoArray);
+                //获取tag todo 不匹配
+                $tagArray = array();
+                $tagSql = <<<EOF
+      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
+EOF;
+                $tagRes = $this->db->query($tagSql);
+                while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($tagArray, $tagRow['type']);
+                }
+                $dating->setTags($tagArray);
+
+                array_push($datingArrayAddress, $dating);
+            }
+        }
+
+        //按价格筛选
+        if ($cost != "全部") {
+            foreach ($datingArrayAddress as $dating) {
+                if ($dating->getCost() == $cost) {
+                    array_push($datingArrayCost, $dating);
+                }
+            }
+        } else {
+            $datingArrayCost = $datingArrayAddress;
+        }
+        //按身份筛选
+        if ($identity != "无") {
+            foreach ($datingArrayCost as $dating) {
+                $userId = $dating->getUserId();
+                $sql = <<<EOF
+select identity from user where id=$userId;
+EOF;
+                $ret = $this->db->query($sql);
+                while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+                    if ($row['identity'] == $identity) {
+                        array_push($datingArrayIdentity, $dating);
+                    }
+                }
+            }
+        } else {
+            $datingArrayIdentity = $datingArrayCost;
+        }
+        //按性别筛选
+        if ($gender != "无") {
+            foreach ($datingArrayIdentity as $dating) {
+                $userId = $dating->getUserId();
+                $sql = <<<EOF
+select gender from user where id=$userId;
+EOF;
+                $ret = $this->db->query($sql);
+                while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+                    if ($row['gender'] == $gender) {
+                        array_push($datingArrayGender, $dating);
+                    }
+                }
+            }
+        } else {
+            $datingArrayGender = $datingArrayIdentity;
+        }
+
+        return $datingArrayGender;
     }
 
     //

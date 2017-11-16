@@ -41,6 +41,7 @@ class shareHandler extends SimpleHandler
 
     public function getExploreShares()
     {
+        echo "rtyui";
 
     }
 

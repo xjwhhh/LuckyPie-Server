@@ -115,7 +115,7 @@ EOF;
         }
         $returnShare->setImageUrls($urlArray);
 
-        //插入albumTag
+        //插入shareTag
         foreach ($tagArray as $tag) {
             $tag = "'" . $tag . "'";
             $tagId = -1;
@@ -126,12 +126,12 @@ EOF;
             while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
                 $tagId = $tagRow['id'];
             }
-            $albumTagSql = <<<EOF
-insert into albumTag values ($shareId,$tagId);
+            $shareTagSql = <<<EOF
+insert into shareTag(shareId,tagId) values ($shareId,$tagId);
 EOF;
-            $albumTagRes = $this->db > exec($albumTagSql);
-            if (!$albumTagRes) {
-                return new Album();
+            $shareTagRes = $this->db->exec($shareTagSql);
+            if (!$shareTagRes) {
+                return new Share();
             }
 
         }
@@ -198,14 +198,10 @@ EOF;
                 array_push($tagArray, $tagRow['type']);
             }
             $share->setTags($tagArray);
-
             array_push($shareArray, $share);
 
         }
-
-//        echo "e45";
         return $shareArray;
-
     }
 
     public function selectHotShares()
