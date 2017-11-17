@@ -55,7 +55,6 @@ class UserHandler extends SimpleHandler
         if (isset($_GET["id"])) {
             $id = $_GET["id"];
         }
-//        $userData = new UserData();
         $user = $this->userData->selectUserDataById($id);
         echo json_encode($user);
     }
@@ -84,58 +83,61 @@ class UserHandler extends SimpleHandler
             $email = $_POST["email"];
         }
 
-//        $userData = new UserData();
-        $user = $this->userData->updateUserBasicInfo($userId, $name,$introduction, $gender, $identity, $telephone, $email);
+        $user = $this->userData->updateUserBasicInfo($userId, $name, $introduction, $gender, $identity, $telephone, $email);
         echo json_encode($user);
 
     }
 
     public function getExploreHotPhotographer()
     {
-//        $userData=new UserData();
-        $result=$this->userData->selectHotPhotographer();
-//        echo "ert";
+        $result = $this->userData->selectHotPhotographer();
         echo json_encode($result);
-
     }
 
     public function getExploreBestPhotographer()
     {
+        $result = $this->userData->selectBestPhotographer();
+        echo json_encode($result);
 
     }
 
 
     public function getExploreNewPhotographer()
     {
+        $result = $this->userData->selectNewPhotographer();
+        echo json_encode($result);
 
     }
 
 
     public function getExploreHotModel()
     {
-
+        $result = $this->userData->selectHotModel();
+        echo json_encode($result);
     }
 
     public function getExploreBestModel()
     {
-
+        $result = $this->userData->selectBestModel();
+        echo json_encode($result);
     }
 
     public function getExploreNewModel()
     {
-
+        $result = $this->userData->selectNewModel();
+        echo json_encode($result);
     }
 
-    public function follow(){
-//        echo "rty";
+    public function follow()
+    {
         if (isset($_POST["followId"])) {
             $followId = $_POST["followId"];
         }
         if (isset($_POST["followerId"])) {
-            $followerId= $_POST["followerId"];
+            $followerId = $_POST["followerId"];
         }
-        $userData=new UserData();
-        $userData->follow($followId,$followerId);
+        $userData = new UserData();
+        $userData->follow($followId, $followerId);
     }
 
 

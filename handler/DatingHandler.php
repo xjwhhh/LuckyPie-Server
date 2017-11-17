@@ -24,11 +24,17 @@ class datingHandler extends SimpleHandler
 
     public function getHotDating()
     {
-
+        $result=$this->datingData->selectHotDating();
+        echo json_encode($result);
     }
 
     public function getFollowingDating()
     {
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result=$this->datingData->selectFollowingDatingByUserId($userId);
+        echo json_encode($result);
 
     }
 
@@ -90,6 +96,11 @@ class datingHandler extends SimpleHandler
 
     public function deleteDating()
     {
+        if (isset($_POST['datingId'])) {
+            $datingId = $_POST['datingId'];
+        }
+        $result=$this->datingData->deleteDating($datingId);
+        echo json_encode($result);
 
     }
 

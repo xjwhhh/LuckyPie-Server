@@ -177,27 +177,29 @@ EOF;
             $share->setPostAddress($row['postAddress']);
             $share->setForwardShareId($row['forwardShareId']);
 
-            $shareId = $share->getId();
-            //获取photo
-            $photoArray = array();
-            $photoSql = <<<EOF
-      SELECT photo.url from sharePhoto,photo where sharePhoto.shareId=$shareId and photo.id=sharePhoto.photoId;
-EOF;
-            $photoRes = $this->db->query($photoSql);
-            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
-                array_push($photoArray, $photoRow['url']);
-            }
-            $share->setImageUrls($photoArray);
-            //获取tag todo 不匹配
-            $tagArray = array();
-            $tagSql = <<<EOF
-      SELECT tag.type from shareTag,tag where shareTag.shareId=$shareId and tag.id=shareTag.tagId;
-EOF;
-            $tagRes = $this->db->query($tagSql);
-            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-                array_push($tagArray, $tagRow['type']);
-            }
-            $share->setTags($tagArray);
+//            $shareId = $share->getId();
+//            //获取photo
+//            $photoArray = array();
+//            $photoSql = <<<EOF
+//      SELECT photo.url from sharePhoto,photo where sharePhoto.shareId=$shareId and photo.id=sharePhoto.photoId;
+//EOF;
+//            $photoRes = $this->db->query($photoSql);
+//            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+//                array_push($photoArray, $photoRow['url']);
+//            }
+//            $share->setImageUrls($photoArray);
+//            //获取tag todo 不匹配
+//            $tagArray = array();
+//            $tagSql = <<<EOF
+//      SELECT tag.type from shareTag,tag where shareTag.shareId=$shareId and tag.id=shareTag.tagId;
+//EOF;
+//            $tagRes = $this->db->query($tagSql);
+//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+//                array_push($tagArray, $tagRow['type']);
+//            }
+//            $share->setTags($tagArray);
+
+            $share=$this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
 
         }
@@ -244,14 +246,17 @@ EOF;
         return $shareArray;
     }
 
-    //根据标签名获取分享
-    public function selectExploreSharesByUserId($tagName)
+    public function selectExploreSharesByUserId($userId)
     {
         $shareArray = array();
-        $sql = <<<EOF
-      SELECT s.id,s.userId,s.description,s.postTime,s.postAddress,s.forwareShareId
-      from share s,shareTag st,tag t where st.shareId=s.id and st.tagId=t.id and t.name=$tagName;
+//        $sql = <<<EOF
+//      SELECT s.id,s.userId,s.description,s.postTime,s.postAddress,s.forwareShareId
+//      from share s,shareTag st,tag t where st.shareId=s.id and st.tagId=t.id and t.name=$tagName;
+//EOF;
+        $sql=<<<EOF
+select * from share;
 EOF;
+
         $res = $this->db->query($sql);
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             $share = new Share();
@@ -261,10 +266,10 @@ EOF;
             $share->setPostTime($row['postTime']);
             $share->setPostAddress($row['postAddress']);
             $share->setForwardShareId($row['forwardShareId']);
+            $share=$this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
         }
         return $shareArray;
-
     }
 
     public function selectFollowingSharesByUserId($userId, $groupName)
@@ -367,5 +372,30 @@ EOF;
             array_push($shareArray, $share);
         }
         return $shareArray;
+    }
+
+    private function getShareImagesAndTags($share){
+        $shareId = $share->getId();
+        //获取photo
+        $photoArray = array();
+        $photoSql = <<<EOF
+      SELECT photo.url from sharePhoto,photo where sharePhoto.shareId=$shareId and photo.id=sharePhoto.photoId;
+EOF;
+        $photoRes = $this->db->query($photoSql);
+        while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+            array_push($photoArray, $photoRow['url']);
+        }
+        $share->setImageUrls($photoArray);
+        //获取tag
+        $tagArray = array();
+        $tagSql = <<<EOF
+      SELECT tag.type from shareTag,tag where shareTag.shareId=$shareId and tag.id=shareTag.tagId;
+EOF;
+        $tagRes = $this->db->query($tagSql);
+        while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+            array_push($tagArray, $tagRow['type']);
+        }
+        $share->setTags($tagArray);
+        return $share;
     }
 }

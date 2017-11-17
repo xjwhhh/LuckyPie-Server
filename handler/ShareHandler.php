@@ -23,6 +23,8 @@ class shareHandler extends SimpleHandler
 
     public function getHotShares()
     {
+        $result=$this->shareData->selectHotShares();
+        echo json_encode($result);
 
     }
 
@@ -41,6 +43,10 @@ class shareHandler extends SimpleHandler
 
     public function getExploreShares()
     {
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result=$this->shareData->selectExploreSharesByUserId($userId);
         echo "rtyui";
 
     }
@@ -81,6 +87,10 @@ class shareHandler extends SimpleHandler
 
     public function deleteShare()
     {
+        if (isset($_POST['shareId'])) {
+            $shareId = $_POST['shareId'];
+        }
+        $result=$this->shareData->deleteShareData($shareId);
 
     }
 

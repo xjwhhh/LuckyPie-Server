@@ -20,6 +20,31 @@ class AlbumData
 
     //对album的操作涉及三个表,album,albumPhoto,albumTag
 
+    private function getAlbumImagesAndTags($album){
+        $albumId = $album->getId();
+        //获取photo
+        $photoArray = array();
+        $photoSql = <<<EOF
+      SELECT photo.url from albumPhoto,photo where albumPhoto.albumId=$albumId and photo.id=albumPhoto.photoId;
+EOF;
+        $photoRes = $this->db->query($photoSql);
+        while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+            array_push($photoArray, $photoRow['url']);
+        }
+        $album->setImageUrls($photoArray);
+        //获取tag
+        $tagArray = array();
+        $tagSql = <<<EOF
+      SELECT tag.type from albumTag,tag where albumTag.albumId=$albumId and tag.id=albumTag.tagId;
+EOF;
+        $tagRes = $this->db->query($tagSql);
+        while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+            array_push($tagArray, $tagRow['type']);
+        }
+        $album->setTags($tagArray);
+        return $album;
+    }
+
     public function getUserAlbumByUserId($userId)
     {
         $albumArray = array();

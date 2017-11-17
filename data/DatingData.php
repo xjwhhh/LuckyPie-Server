@@ -19,6 +19,31 @@ class DatingData
 
     //对dating的操作涉及三个表,dating,datingPhoto,datingTag
 
+    private function getDatingImagesAndTags($dating){
+        $datingId=$dating->getId();
+        //获取photo
+        $photoArray = array();
+        $photoSql = <<<EOF
+      SELECT photo.url from datingPhoto,photo where datingPhoto.shareId=$datingId and photo.id=datingPhoto.photoId;
+EOF;
+        $photoRes = $this->db->query($photoSql);
+        while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+            array_push($photoArray, $photoRow['url']);
+        }
+        $dating->setImageUrls($photoArray);
+        //获取tag todo 不匹配
+        $tagArray = array();
+        $tagSql = <<<EOF
+      SELECT tag.type from datingTag,tag where datingTag.shareId=$datingId and tag.id=datingTag.tagId;
+EOF;
+        $tagRes = $this->db->query($tagSql);
+        while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+            array_push($tagArray, $tagRow['type']);
+        }
+        $dating->setTags($tagArray);
+        return $dating;
+    }
+
     public function insertDating($dating)
     {
         $returnDating = new Dating();
@@ -32,7 +57,6 @@ class DatingData
         $photoArray = $dating->getImageUrls();
         $tagArray = $dating->getTags();
 
-        //todo 中文乱码问题
         $description = "'" . $description . "'";
         $postTime = "'" . $postTime . "'";
         $cost = "'" . $cost . "'";
@@ -195,7 +219,7 @@ EOF;
                 array_push($photoArray, $photoRow['url']);
             }
             $dating->setImageUrls($photoArray);
-            //获取tag todo 不匹配
+            //获取tag
             $tagArray = array();
             $tagSql = <<<EOF
       SELECT tag.type from datingTag,tag where datingTag.shareId=$datingId and tag.id=datingTag.tagId;
