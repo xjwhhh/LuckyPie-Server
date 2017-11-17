@@ -11,6 +11,7 @@ require_once(dirname(__FILE__) . '/../data/ShareData.php');
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Methods:POST');
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
+
 class shareHandler extends SimpleHandler
 {
 
@@ -23,7 +24,7 @@ class shareHandler extends SimpleHandler
 
     public function getHotShares()
     {
-        $result=$this->shareData->selectHotShares();
+        $result = $this->shareData->selectHotShares();
         echo json_encode($result);
 
     }
@@ -35,27 +36,42 @@ class shareHandler extends SimpleHandler
             $userId = $_POST['userId'];
         }
         //todo groupName
-        $groupName="全部";
-        $result=$this->shareData->selectFollowingSharesByUserId($userId,$groupName);
+        $groupName = "全部";
+        $result = $this->shareData->selectFollowingSharesByUserId($userId, $groupName);
         echo json_encode($result);
 
     }
 
+    public function getAllTags(){
+        $result=$this->shareData->getAllTags();
+        echo json_encode($result);
+    }
+
     public function getExploreShares()
     {
-        if (isset($_POST['userId'])) {
-            $userId = $_POST['userId'];
+        if (isset($_POST['selectedTag'])) {
+            $selectedTag = $_POST['selectedTag'];
         }
-        $result=$this->shareData->selectExploreSharesByUserId($userId);
-        echo "rtyui";
+        $result = $this->shareData->selectExploreSharesByTag($selectedTag);
+        echo json_encode($result);
 
     }
 
-    public function getUserShares(){
+    public function getUserShares()
+    {
         if (isset($_GET["id"])) {
             $userId = $_GET["id"];
         }
-        $result=$this->shareData->selectSharesDataByUserId($userId);
+        $result = $this->shareData->selectSharesDataByUserId($userId);
+        echo json_encode($result);
+    }
+
+    public function getLimitShares()
+    {
+        if (isset($_GET["id"])) {
+            $userId = $_GET["id"];
+        }
+        $result = $this->shareData->selectLimitSharesDataByUserId($userId);
         echo json_encode($result);
     }
 
@@ -90,11 +106,12 @@ class shareHandler extends SimpleHandler
         if (isset($_POST['shareId'])) {
             $shareId = $_POST['shareId'];
         }
-        $result=$this->shareData->deleteShareData($shareId);
+        $result = $this->shareData->deleteShareData($shareId);
 
     }
 
-    public function doThumb(){
+    public function doThumb()
+    {
         if (isset($_POST['userId'])) {
             $userId = $_POST['userId'];
         }
@@ -102,10 +119,11 @@ class shareHandler extends SimpleHandler
             $shareId = $_POST['shareId'];
         }
 
-        $result=$this->shareData->insertThumb($userId,$shareId);
+        $result = $this->shareData->insertThumb($userId, $shareId);
     }
 
-    public function cancelThumb(){
+    public function cancelThumb()
+    {
         if (isset($_POST['userId'])) {
             $userId = $_POST['userId'];
         }
@@ -113,14 +131,15 @@ class shareHandler extends SimpleHandler
             $shareId = $_POST['shareId'];
         }
 
-        $result=$this->shareData->cancelThumb($userId,$shareId);
+        $result = $this->shareData->cancelThumb($userId, $shareId);
     }
 
-    public function getUserLikes(){
+    public function getUserLikes()
+    {
         if (isset($_GET["id"])) {
             $userId = $_GET["id"];
         }
-        $result=$this->shareData->getUserLikes($userId);
+        $result = $this->shareData->getUserLikes($userId);
         echo json_encode($result);
     }
 

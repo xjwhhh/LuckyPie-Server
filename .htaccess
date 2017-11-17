@@ -12,6 +12,7 @@ RewriteRule ^api/post/user/register$ controller/UserController.php?option=regist
 RewriteRule ^api/get/user/basicinfo/([0-9]+)$ controller/UserController.php?option=getBasicInfo&id=$1 [nc,qsa]
 RewriteRule ^api/post/user/info$ controller/UserController.php?option=updateInfo [nc,qsa]
 RewriteRule ^api/get/user/info/share/([0-9]+)$ controller/ShareController.php?option=getUserShare&id=$1 [nc,qsa]
+RewriteRule ^api/get/user/info/share/limit/([0-9]+)$ controller/ShareController.php?option=getLimitShare&id=$1 [nc,qsa]
 RewriteRule ^api/get/user/info/album/([0-9]+)$ controller/AlbumController.php?option=getUserAlbum&id=$1 [nc,qsa]
 RewriteRule ^api/get/user/info/dating/([0-9]+)$ controller/DatingController.php?option=getUserDating&id=$1 [nc,qsa]
 RewriteRule ^api/get/user/info/like/([0-9]+)$ controller/ShareController.php?option=getUserLike&id=$1 [nc,qsa]
@@ -36,6 +37,7 @@ RewriteRule ^api/post/follow/share$ controller/ShareController.php?option=getFol
 #explore
 RewriteRule ^api/post/explore/dating$ controller/DatingController.php?option=getExploreDating [nc,qsa]
 RewriteRule ^api/post/explore/share$ controller/ShareController.php?option=getExploreShare [nc,qsa]
+RewriteRule ^api/get/explore/tags$ controller/ShareController.php?option=getAllTags [nc,qsa]
 RewriteRule ^api/get/explore/photographer/hot$ controller/UserController.php?option=getExploreHotPhotographer [nc,qsa]
 RewriteRule ^api/get/explore/photographer/best$ controller/UserController.php?option=getExploreBestPhotographer [nc,qsa]
 RewriteRule ^api/get/explore/photographer/new$ controller/UserController.php?option=getExploreNewPhotographer [nc,qsa]

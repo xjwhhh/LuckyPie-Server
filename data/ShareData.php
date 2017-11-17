@@ -176,30 +176,29 @@ EOF;
             $share->setPostTime($row['postTime']);
             $share->setPostAddress($row['postAddress']);
             $share->setForwardShareId($row['forwardShareId']);
+            $share = $this->getShareImagesAndTags($share);
+            array_push($shareArray, $share);
 
-//            $shareId = $share->getId();
-//            //获取photo
-//            $photoArray = array();
-//            $photoSql = <<<EOF
-//      SELECT photo.url from sharePhoto,photo where sharePhoto.shareId=$shareId and photo.id=sharePhoto.photoId;
-//EOF;
-//            $photoRes = $this->db->query($photoSql);
-//            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
-//                array_push($photoArray, $photoRow['url']);
-//            }
-//            $share->setImageUrls($photoArray);
-//            //获取tag todo 不匹配
-//            $tagArray = array();
-//            $tagSql = <<<EOF
-//      SELECT tag.type from shareTag,tag where shareTag.shareId=$shareId and tag.id=shareTag.tagId;
-//EOF;
-//            $tagRes = $this->db->query($tagSql);
-//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-//                array_push($tagArray, $tagRow['type']);
-//            }
-//            $share->setTags($tagArray);
+        }
+        return $shareArray;
+    }
 
-            $share=$this->getShareImagesAndTags($share);
+    public function selectLimitSharesDataByUserId($userId)
+    {
+        $shareArray = array();
+        $sql = <<<EOF
+      SELECT * from share where userId=$userId limit 6;
+EOF;
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $share = new Share();
+            $share->setId($row['id']);
+            $share->setUserId($row['userId']);
+            $share->setDesc($row['description']);
+            $share->setPostTime($row['postTime']);
+            $share->setPostAddress($row['postAddress']);
+            $share->setForwardShareId($row['forwardShareId']);
+            $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
 
         }
@@ -246,15 +245,46 @@ EOF;
         return $shareArray;
     }
 
-    public function selectExploreSharesByUserId($userId)
+    public function getAllTags()
     {
+        $sql = <<<EOF
+select type from tag;
+EOF;
+        $tagArray = array();
+        $imageArray = array();
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            array_push($tagArray, $row['type']);
+        }
+        foreach ($tagArray as $tagName) {
+            $isExist = false;
+            $tagName = "'" . $tagName . "'";
+            $sql = <<<EOF
+ SELECT p.url
+ from share s,shareTag st,tag t,sharePhoto sp,photo p 
+ where st.shareId=s.id and st.tagId=t.id and t.type=$tagName and s.id=sp.shareId and sp.photoId=p.id
+  limit 1; 
+EOF;
+            $res = $this->db->query($sql);
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $isExist = true;
+                array_push($imageArray, $row['url']);
+            }
+            //todo 默认图片
+            if (!$isExist) {
+                array_push($imageArray, "http://localhost/LuckyPie-Server/photo/20171116/15108433663.jpeg");
+            }
+        }
+        return $imageArray;
+    }
+
+    public function selectExploreSharesByTag($tagName)
+    {
+        $tagName = "'" . $tagName . "'";
         $shareArray = array();
-//        $sql = <<<EOF
-//      SELECT s.id,s.userId,s.description,s.postTime,s.postAddress,s.forwareShareId
-//      from share s,shareTag st,tag t where st.shareId=s.id and st.tagId=t.id and t.name=$tagName;
-//EOF;
-        $sql=<<<EOF
-select * from share;
+        $sql = <<<EOF
+      SELECT s.id,s.userId,s.description,s.postTime,s.postAddress,s.forwardShareId
+      from share s,shareTag st,tag t where st.shareId=s.id and st.tagId=t.id and t.type=$tagName;
 EOF;
 
         $res = $this->db->query($sql);
@@ -266,9 +296,11 @@ EOF;
             $share->setPostTime($row['postTime']);
             $share->setPostAddress($row['postAddress']);
             $share->setForwardShareId($row['forwardShareId']);
-            $share=$this->getShareImagesAndTags($share);
+            $share = $this->getShareImagesAndTags($share);
+            $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
         }
+//        print_r($shareArray);
         return $shareArray;
     }
 
@@ -374,7 +406,8 @@ EOF;
         return $shareArray;
     }
 
-    private function getShareImagesAndTags($share){
+    private function getShareImagesAndTags($share)
+    {
         $shareId = $share->getId();
         //获取photo
         $photoArray = array();

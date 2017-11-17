@@ -104,7 +104,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -123,7 +123,6 @@ EOF;
     //todo 如何知道要更新的是哪些内容->全部更新
     public function updateUserBasicInfo($userId, $name, $introduction, $gender, $identity, $telephone, $email)
     {
-
         $user = new User();
         if ($introduction == null) {
             $introduction = "他很懒哦，暂无自我介绍";
@@ -175,6 +174,7 @@ EOF;
     public function selectHotPhotographer()
     {
         $userArray = array();
+        //todo 应该是被点赞最多的，所以thumb里最好存储被点赞的userId
         //todo 点赞最多的一千个摄影师，随机选一百个展现
 //        $sql = <<<EOF
 //      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
@@ -185,7 +185,7 @@ EOF;
 //       limit 1000
 //       ;
 //EOF;
-        $sql=<<<EOF
+        $sql = <<<EOF
 select * from user where IDENTITY ="摄影师";
 EOF;
 
@@ -198,7 +198,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -238,7 +238,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -276,7 +276,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -315,7 +315,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -354,7 +354,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -392,7 +392,7 @@ EOF;
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
             $user->setIdentity($row['identity']);
-            $user->setIntroduction($row['identity']);
+            $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
             if ($row['telephone'] == "-1") {
                 $user->setTelephone(null);
@@ -409,9 +409,10 @@ EOF;
         return $userArray;
     }
 
-    public function follow($followId,$followerId){
+    public function follow($followId, $followerId)
+    {
 //        echo "success";
-        $sql=<<<EOF
+        $sql = <<<EOF
 insert into follow(followId,followerId,groupId) values($followId,$followerId,-1);
 EOF;
         $ret = $this->db->exec($sql);

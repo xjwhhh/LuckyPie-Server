@@ -31,6 +31,10 @@ switch ($option) {
         $shareHandler->getUserShares();
         break;
 
+    case "getLimitShare":
+        $shareHandler->getLimitShares();
+        break;
+
     case "getFollowShare":
         $shareHandler->getFollowingShares();
         break;
@@ -53,6 +57,10 @@ switch ($option) {
 
     case "getUserLike":
         $shareHandler->getUserLikes();
+        break;
+
+    case "getAllTags":
+        $shareHandler->getAllTags();
         break;
 
 }

@@ -24,7 +24,7 @@ class DatingData
         //获取photo
         $photoArray = array();
         $photoSql = <<<EOF
-      SELECT photo.url from datingPhoto,photo where datingPhoto.shareId=$datingId and photo.id=datingPhoto.photoId;
+      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
 EOF;
         $photoRes = $this->db->query($photoSql);
         while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
@@ -34,7 +34,7 @@ EOF;
         //获取tag todo 不匹配
         $tagArray = array();
         $tagSql = <<<EOF
-      SELECT tag.type from datingTag,tag where datingTag.shareId=$datingId and tag.id=datingTag.tagId;
+      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
 EOF;
         $tagRes = $this->db->query($tagSql);
         while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
@@ -208,27 +208,28 @@ EOF;
             $dating->setPhotoAddress($row['photoAddress']);
             $dating->setPostAddress($row['postAddress']);
 
-            $datingId=$dating->getId();
-            //获取photo
-            $photoArray = array();
-            $photoSql = <<<EOF
-      SELECT photo.url from datingPhoto,photo where datingPhoto.shareId=$datingId and photo.id=datingPhoto.photoId;
-EOF;
-            $photoRes = $this->db->query($photoSql);
-            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
-                array_push($photoArray, $photoRow['url']);
-            }
-            $dating->setImageUrls($photoArray);
-            //获取tag
-            $tagArray = array();
-            $tagSql = <<<EOF
-      SELECT tag.type from datingTag,tag where datingTag.shareId=$datingId and tag.id=datingTag.tagId;
-EOF;
-            $tagRes = $this->db->query($tagSql);
-            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-                array_push($tagArray, $tagRow['type']);
-            }
-            $dating->setTags($tagArray);
+//            $datingId=$dating->getId();
+//            //获取photo
+//            $photoArray = array();
+//            $photoSql = <<<EOF
+//      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
+//EOF;
+//            $photoRes = $this->db->query($photoSql);
+//            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
+//                array_push($photoArray, $photoRow['url']);
+//            }
+//            $dating->setImageUrls($photoArray);
+//            //获取tag
+//            $tagArray = array();
+//            $tagSql = <<<EOF
+//      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
+//EOF;
+//            $tagRes = $this->db->query($tagSql);
+//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
+//                array_push($tagArray, $tagRow['type']);
+//            }
+//            $dating->setTags($tagArray);
+            $dating=$this->getDatingImagesAndTags($dating);
 
             array_push($datingArray, $dating);
         }
@@ -381,6 +382,8 @@ EOF;
         } else {
             $datingArrayGender = $datingArrayIdentity;
         }
+
+//        echo json_encode($datingArrayCost);
 
         return $datingArrayGender;
     }
