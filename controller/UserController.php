@@ -28,8 +28,11 @@ switch ($option){
         break;
 
     case "getBasicInfo":
-//        echo "456";
-        $userHandler->getUserInfo();//todo
+        $userHandler->getUserInfo();
+        break;
+
+    case "updateHead":
+        $userHandler->updateUserHead();
         break;
 
     case "updateInfo":

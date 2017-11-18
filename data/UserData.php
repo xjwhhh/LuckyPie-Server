@@ -8,6 +8,7 @@
 
 require_once("connect.php");
 require_once(dirname(__FILE__) . '/../entity/User.php');
+require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
 
 class UserData
 {
@@ -37,9 +38,11 @@ EOF;
         if ($count == 0) {
             //插入
             $authority = 0;
+            $headUrl="http://localhost/LuckyPie-Server/photo/default/head.png";
+            $headUrl="'".$headUrl."'";
             $sql = <<<EOF
-      INSERT INTO USER (account,password,name,authority)
-      VALUES ($account,$password,"乐拍成员",$authority);
+      INSERT INTO USER (account,password,name,authority,head)
+      VALUES ($account,$password,"乐拍成员",$authority,$headUrl);
 EOF;
             $ret = $this->db->exec($sql);
             //填充数据
@@ -54,6 +57,7 @@ EOF;
                     $user->setAccount($row['account']);
                     $user->setPassword($row['password']);
                     $user->setAuthority($row['authority']);
+                    $user->setHead($row['head']);
                 }
             }
         }
@@ -73,6 +77,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setGender($row['gender']);
             $user->setIntroduction($row['introduction']);
@@ -103,6 +108,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -118,6 +124,43 @@ EOF;
             }
         }
         return $user;
+    }
+
+    public function updateUserHead($userId,$headInfo)
+    {
+        $resultMessage=new ResultMessage();
+        $photoId = 0;
+        //不查看照片是否已经上传过
+        //上传至服务器
+        preg_match('/^(data:\s*image\/(\w+);base64,)/', $headInfo, $result);
+        $type = $result[2];
+        $catalog = date('Ymd', time()) . "/";
+        $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" . $catalog;
+        $http_file = "http://localhost/LuckyPie-Server/photo/" . $catalog;
+        if (!file_exists($new_file)) {
+//检查是否有该文件夹，如果没有就创建，并给予最高权限
+            mkdir($new_file, 0700);
+        }
+        $time = time();
+        $new_file = $new_file . $time . ".{$type}";
+        $http_file = $http_file . $time . ".{$type}";
+        $base64Code = str_replace(" ", "+", $headInfo);
+        $tt = str_replace($result[1], '', $base64Code);
+        $ll = base64_decode($tt);
+        file_put_contents($new_file, $ll);
+        $http_file = "'" . $http_file . "'";
+        $headSql = <<<EOF
+update user set head=$http_file where id=$userId;
+EOF;
+        $headRes = $this->db->exec($headSql);
+        if ($headRes) {
+            $resultMessage->setResult("success");
+        } else {
+           $resultMessage->setResult("fail");
+
+        }
+        return $resultMessage;
+
     }
 
     //todo 如何知道要更新的是哪些内容->全部更新
@@ -197,6 +240,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -237,6 +281,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -275,6 +320,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -314,6 +360,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -353,6 +400,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -391,6 +439,7 @@ EOF;
             $user->setPassword($row['password']);
             $user->setAuthority($row['authority']);
             $user->setName($row['name']);
+            $user->setHead($row['head']);
             $user->setIdentity($row['identity']);
             $user->setIntroduction($row['introduction']);
             $user->setGender($row['gender']);
@@ -411,13 +460,18 @@ EOF;
 
     public function follow($followId, $followerId)
     {
-//        echo "success";
+        $resultMessage=new ResultMessage();
         $sql = <<<EOF
 insert into follow(followId,followerId,groupId) values($followId,$followerId,-1);
 EOF;
         $ret = $this->db->exec($sql);
-//        print_r($ret);
+        if($ret){
+            $resultMessage->setResult("success");
 
+        }else{
+            $resultMessage->setResult("fail");
+        }
+        return $resultMessage;
     }
 }
 

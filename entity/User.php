@@ -13,6 +13,7 @@ Class User
     public $account;
     public $password;
     public $name;
+    public $head;
     public $authority;
     public $introduction;
     public $identity;
@@ -89,6 +90,24 @@ Class User
     {
         $this->name = $name;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHead()
+    {
+        return $this->head;
+    }
+
+    /**
+     * @param mixed $head
+     */
+    public function setHead($head)
+    {
+        $this->head = $head;
+    }
+
+
 
     /**
      * @return mixed

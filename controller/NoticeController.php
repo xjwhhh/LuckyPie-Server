@@ -12,10 +12,22 @@ if(isset($_GET["option"]))
     $option = $_GET["option"];
 if(isset($_POST["option"]))
     $option = $_POST["option"];
+$noticeHandler=new noticeHandler();
+
 
 switch ($option) {
+
     case "getNotice":
-        $noticeHandler=new noticeHandler();
         $noticeHandler->getNotice();
         break;
+
+    case "getShareComment":
+        $noticeHandler->getShareComment();
+        break;
+
+    case "doShareComment":
+        $noticeHandler->addShareComment();
+        break;
+
+
 }

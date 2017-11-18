@@ -14,13 +14,14 @@ if (!$db) {
     echo "Opened database successfully\n";
 }
 
-////create table user
+//create table user
 //$sql= <<<EOF
 //      CREATE TABLE user
 //      (id INTEGER PRIMARY KEY autoincrement,
 //      account VARCHAR(255)   NOT NULL,
 //      password VARCHAR(255)    NOT NULL,
 //      name VARCHAR(255),
+//      head VARCHAR(255),
 //      authority int not null,
 //      introduction text,
 //      identity varchar(255),
@@ -236,14 +237,15 @@ if (!$db) {
 //}
 //$db->close();
 
-////create table comment
+//create table comment
 //$sql= <<<EOF
-//      CREATE TABLE comment
+//      CREATE TABLE shareComment
 //      (id INTEGER PRIMARY KEY autoincrement,
 //      userId int not null,
 //      replyShareId int not null,
 //      replyCommentId int not null,
-//      content text
+//      content text,
+//      times varchar(255) not null
 //      );
 //EOF;
 //

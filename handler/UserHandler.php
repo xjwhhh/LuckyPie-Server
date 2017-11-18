@@ -59,6 +59,17 @@ class UserHandler extends SimpleHandler
         echo json_encode($user);
     }
 
+    public function updateUserHead(){
+        if (isset($_POST["userId"])) {
+            $userId = $_POST["userId"];
+        }
+        if (isset($_POST["headInfo"])) {
+            $headInfo = $_POST["headInfo"];
+        }
+        $result=$this->userData->updateUserHead($userId,$headInfo);
+        echo json_encode($result);
+    }
+
     public function updateUserInfo()
     {
         if (isset($_POST["userId"])) {
@@ -136,8 +147,8 @@ class UserHandler extends SimpleHandler
         if (isset($_POST["followerId"])) {
             $followerId = $_POST["followerId"];
         }
-        $userData = new UserData();
-        $userData->follow($followId, $followerId);
+        $result=$this->userData->follow($followId, $followerId);
+        echo json_encode($result);
     }
 
 
