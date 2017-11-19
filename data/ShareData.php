@@ -328,6 +328,18 @@ EOF;
             $shareArray = array_merge_recursive($shareArray, $result);
         }
 //        print_r($shareArray);
+        foreach ($shareArray as $share){
+            $shareId=$share->getId();
+            $sql=<<<EOF
+select * from thumb where userId=$userId and shareId=$shareId;
+EOF;
+
+            $res = $this->db->query($sql);
+            $share->setThumb(0);
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $share->setThumb(1);
+            }
+        }
         return $shareArray;
         //todo 按时间排序
     }

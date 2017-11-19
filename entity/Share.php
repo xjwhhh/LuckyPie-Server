@@ -16,6 +16,24 @@ class Share
     public $postTime;
     public $postAddress;
     public $forwardShareId;
+    public $thumb;
+
+    /**
+     * @return mixed
+     */
+    public function getThumb()
+    {
+        return $this->thumb;
+    }
+
+    /**
+     * @param mixed $thumb
+     */
+    public function setThumb($thumb)
+    {
+        $this->thumb = $thumb;
+    }
+
 
     /**
      * @return mixed
