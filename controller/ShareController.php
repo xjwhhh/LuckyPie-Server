@@ -47,20 +47,16 @@ switch ($option) {
         $shareHandler->getHotShares();
         break;
 
-    case "doThumb":
-        $shareHandler->doThumb();
-        break;
-
-    case "cancelThumb":
-        $shareHandler->cancelThumb();
-        break;
-
     case "getUserLike":
         $shareHandler->getUserLikes();
         break;
 
     case "getAllTags":
         $shareHandler->getAllTags();
+        break;
+
+    case "getShareByShareId":
+        $shareHandler->getShareByShareId();
         break;
 
 }

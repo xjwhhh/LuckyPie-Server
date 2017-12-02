@@ -32,6 +32,44 @@ class noticeHandler extends SimpleHandler{
 
     }
 
+    public function getThumbNotice(){
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result=$this->noticeData->selectThumbNotice($userId);
+        echo json_encode($result);
+    }
+
+    public function doShareThumb()
+    {
+        if (isset($_POST['startUserId'])) {
+            $startUserId = $_POST['startUserId'];
+        }
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        if (isset($_POST['shareId'])) {
+            $shareId = $_POST['shareId'];
+        }
+
+        $result = $this->noticeData->insertShareThumb($startUserId,$userId, $shareId);
+    }
+
+    public function cancelShareThumb()
+    {
+        if (isset($_POST['startUserId'])) {
+            $startUserId = $_POST['startUserId'];
+        }
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        if (isset($_POST['shareId'])) {
+            $shareId = $_POST['shareId'];
+        }
+
+        $result = $this->noticeData->cancelShareThumb($startUserId,$userId, $shareId);
+    }
+
     public function addShareComment(){
         if (isset($_POST['userId'])) {
             $userId=$_POST['userId'];

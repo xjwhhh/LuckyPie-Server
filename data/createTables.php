@@ -5,7 +5,7 @@
  * Dating: 2017/11/1
  * Time: 22:35
  */
-require_once ("connect.php");
+require_once("connect.php");
 
 $db = new MyDB();
 if (!$db) {
@@ -369,7 +369,6 @@ if (!$db) {
 //}
 
 
-
 //$sql = <<<EOF
 //      SELECT * from user;
 //EOF;
@@ -402,4 +401,25 @@ if (!$db) {
 //}
 //echo "Operation done successfully\n";
 //
+//$db->close();
+
+////create table notice
+//$sql = <<<EOF
+//      CREATE TABLE notice
+//      (id INTEGER PRIMARY KEY autoincrement,
+//      userId int   NOT NULL,
+//      startUserId int   NOT NULL,
+//      postId int ,
+//      type varchar(255),
+//      content text,
+//      isRead int
+//      );
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Records created successfully\n";
+//}
 //$db->close();

@@ -8,6 +8,7 @@
 require_once("connect.php");
 require_once(dirname(__FILE__) . '/../entity/Comment.php');
 require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
+require_once(dirname(__FILE__) . '/../entity/Notice.php');
 
 class NoticeData
 {
@@ -16,6 +17,35 @@ class NoticeData
     function __construct()
     {
         $this->db = new MyDB();
+    }
+
+    public function insertShareThumb($startUserId,$userId, $shareId)
+    {
+        $sql = <<<EOF
+insert into thumb (userId,shareId) values ($startUserId,$shareId);
+EOF;
+        $res = $this->db->exec($sql);
+        if($res) {
+//            echo "rsuccess";
+            $insertNoticeRes=$this->insertNotice($startUserId,$userId,"分享点赞",$shareId,"分享点赞");
+            if($insertNoticeRes->getResult()=="success"){
+                echo "insertShareThumb Success";
+            }
+        }
+    }
+
+    public function cancelShareThumb($startUserId,$userId, $shareId)
+    {
+        $sql = <<<EOF
+update thumb set userId=-1,shareId=-1 where userId=$startUserId and shareId=$shareId;
+EOF;
+        $res = $this->db->exec($sql);
+        if ($res) {
+            $deleteNoticeRes=$this->deleteNotice($startUserId,$userId,"分享点赞",$shareId);
+            if($deleteNoticeRes->getResult()=="success"){
+                echo "deleteShareThumb Success";
+            }
+        }
     }
 
     public function insertShareComment($userId, $replyShareId, $replyCommentId, $content)
@@ -27,6 +57,7 @@ class NoticeData
         if ($replyCommentId == "") {
             $replyCommentId = -1;
         }
+        date_default_timezone_set("Asia/Shanghai");
         $time=date('Y-m-d H:i:s', time());
         $time="'".$time."'";
         $sql = <<<EOF
@@ -96,4 +127,81 @@ EOF;
 
 
     }
+
+
+    public function insertNotice($startUserId,$userId,$type,$postId,$content){
+        $result=new ResultMessage();
+        $isRead=0;
+        if($type=="分享点赞"||$type=="分享评论"||$type=="相册点赞"||$type="相册评论"){
+        $content=$this->modifyText($content);
+        $type=$this->modifyText($type);
+            $sql=<<<EOF
+insert into notice (userId,startUserId,type,postId,content,isRead) values($userId,$startUserId,$type,$postId,$content,$isRead);
+EOF;
+        }
+        else {
+            echo "345678";
+        }
+        $res = $this->db->exec($sql);
+        if($res){
+            $result->setResult("success");
+        }else{
+            $result->setResult("fail");
+        }
+        return $result;
+
+
+    }
+
+    public function deleteNotice($startUserId,$userId,$type,$postId){
+        $result=new ResultMessage();
+        $isRead=0;
+        if($type=="分享点赞"||$type=="分享评论"||$type=="相册点赞"||$type="相册评论"){
+//            $content=$this->modifyText($content);
+            $type=$this->modifyText($type);
+            $sql=<<<EOF
+update notice set startUserId=-1 and userId=-1 where startUserId=$startUserId and userId=$userId and type=$type and postId=$postId;
+EOF;
+        }
+        else {
+            echo "345678";
+        }
+        $res = $this->db->exec($sql);
+        if($res){
+            $result->setResult("success");
+        }else{
+            $result->setResult("fail");
+        }
+        return $result;
+
+
+    }
+
+
+
+
+    public function selectThumbNotice($userId){
+        $noticeArray=array();
+        $sql=<<<EOF
+select * from notice where userId=$userId and type like '%点赞' and isRead=0;
+EOF;
+        $result = $this->db->query($sql);
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $notice=new Notice();
+            $notice->setId($row['id']);
+            $notice->setUserId($row['userId']);
+            $notice->setStartUserId($row['startUserId']);
+            $notice->setType($row['type']);
+            $notice->setPostId($row['postId']);
+            $notice->setContent($row['content']);
+            array_push($noticeArray,$notice);
+        }
+        return $noticeArray;
+
+
+    }
+
+    private function modifyText($text){
+        return "'".$text."'";
+}
 }

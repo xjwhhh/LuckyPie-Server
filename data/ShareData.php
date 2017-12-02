@@ -161,6 +161,26 @@ EOF;
         }
     }
 
+    public function selectShareDataByShareId($shareId){
+        $sql=<<<EOF
+select * from share where id=$shareId;
+EOF;
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $share = new Share();
+            $share->setId($row['id']);
+            $share->setUserId($row['userId']);
+            $share->setDesc($row['description']);
+            $share->setPostTime($row['postTime']);
+            $share->setPostAddress($row['postAddress']);
+            $share->setForwardShareId($row['forwardShareId']);
+            $share = $this->getShareImagesAndTags($share);
+
+        }
+        return $share;
+
+    }
+
     public function selectSharesDataByUserId($userId)
     {
         $shareArray = array();
@@ -263,6 +283,7 @@ EOF;
  SELECT p.url
  from share s,shareTag st,tag t,sharePhoto sp,photo p 
  where st.shareId=s.id and st.tagId=t.id and t.type=$tagName and s.id=sp.shareId and sp.photoId=p.id
+ order by p.id desc
   limit 1; 
 EOF;
             $res = $this->db->query($sql);
@@ -344,27 +365,9 @@ EOF;
         //todo 按时间排序
     }
 
-    public function insertThumb($userId, $shareId)
-    {
-        $sql = <<<EOF
-insert into thumb (userId,shareId) values ($userId,$shareId);
-EOF;
-        $res = $this->db->exec($sql);
-//        if($res) {
-//            echo "rsuccess";
-//        }
-    }
 
-    public function cancelThumb($userId, $shareId)
-    {
-        $sql = <<<EOF
-update thumb set userId=-1,shareId=-1 where userId=$userId and shareId=$shareId;
-EOF;
-        $res = $this->db->exec($sql);
-        if ($res) {
-            echo "rsuccess";
-        }
-    }
+
+
 
     public function getUserLikes($userId)
     {

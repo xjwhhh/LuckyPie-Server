@@ -48,14 +48,16 @@ RewriteRule ^api/get/explore/model/new$ controller/UserController.php?option=get
 
 #notice
 RewriteRule ^api/post/notice$ controller/NoticeController.php?option=getNotice [nc,qsa]
+RewriteRule ^api/post/thumbNotice$ controller/NoticeController.php?option=getThumbNotice [nc,qsa]
+RewriteRule ^api/get/shareByShareId/([0-9]+)$ controller/ShareController.php?option=getShareByShareId&shareId=$1 [nc,qsa]
 
 #hot
 RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShare [nc,qsa]
 
 
 RewriteRule ^api/post/follow$ controller/UserController.php?option=follow [nc,qsa]
-RewriteRule ^api/post/share/doThumb$ controller/ShareController.php?option=doThumb [nc,qsa]
-RewriteRule ^api/post/share/cancelThumb$ controller/ShareController.php?option=cancelThumb [nc,qsa]
+RewriteRule ^api/post/share/doThumb$ controller/NoticeController.php?option=doShareThumb [nc,qsa]
+RewriteRule ^api/post/share/cancelThumb$ controller/NoticeController.php?option=cancelShareThumb [nc,qsa]
 
 
 RewriteRule ^api/post/share/doComment$ controller/NoticeController.php?option=doShareComment [nc,qsa]
