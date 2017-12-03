@@ -26,8 +26,7 @@ insert into thumb (userId,shareId) values ($startUserId,$shareId);
 EOF;
         $res = $this->db->exec($sql);
         if($res) {
-//            echo "rsuccess";
-            $insertNoticeRes=$this->insertNotice($startUserId,$userId,"分享点赞",$shareId,"分享点赞");
+            $insertNoticeRes=$this->insertNotice($startUserId,$userId,"分享点赞",$shareId,"'分享点赞'");
             if($insertNoticeRes->getResult()=="success"){
                 echo "insertShareThumb Success";
             }
@@ -48,9 +47,9 @@ EOF;
         }
     }
 
-    public function insertShareComment($userId, $replyShareId, $replyCommentId, $content)
+    public function insertShareComment($startUserId,$userId, $replyShareId, $replyCommentId, $content)
     {
-        $content = "'" . $content . "'";
+        $content = $this->modifyText($content);
 //        $returnComment=new Comment();
         $resultMessage = new ResultMessage();
 
@@ -61,7 +60,7 @@ EOF;
         $time=date('Y-m-d H:i:s', time());
         $time="'".$time."'";
         $sql = <<<EOF
-insert into shareComment (userId,replyShareId,replyCommentId,content,times) values ($userId,$replyShareId,$replyCommentId,$content,$time);
+insert into shareComment (userId,replyShareId,replyCommentId,content,times) values ($startUserId,$replyShareId,$replyCommentId,$content,$time);
 EOF;
 //        }
 //        else{
@@ -82,7 +81,12 @@ EOF;
 //
 //
 //            }
-            $resultMessage->setResult("success");
+            $insertNoticeRes=$this->insertNotice($startUserId,$userId,"分享评论",$replyShareId,$content);
+            if($insertNoticeRes->getResult()=="success"){
+                $resultMessage->setResult("success");
+            }
+
+
 
 
         } else {
@@ -132,15 +136,12 @@ EOF;
     public function insertNotice($startUserId,$userId,$type,$postId,$content){
         $result=new ResultMessage();
         $isRead=0;
-        if($type=="分享点赞"||$type=="分享评论"||$type=="相册点赞"||$type="相册评论"){
-        $content=$this->modifyText($content);
+        $sql="";
+        if($type=="分享点赞"||$type=="相册点赞"||$type=="分享评论"||$type="相册评论"){
         $type=$this->modifyText($type);
             $sql=<<<EOF
 insert into notice (userId,startUserId,type,postId,content,isRead) values($userId,$startUserId,$type,$postId,$content,$isRead);
 EOF;
-        }
-        else {
-            echo "345678";
         }
         $res = $this->db->exec($sql);
         if($res){
@@ -155,9 +156,7 @@ EOF;
 
     public function deleteNotice($startUserId,$userId,$type,$postId){
         $result=new ResultMessage();
-        $isRead=0;
         if($type=="分享点赞"||$type=="分享评论"||$type=="相册点赞"||$type="相册评论"){
-//            $content=$this->modifyText($content);
             $type=$this->modifyText($type);
             $sql=<<<EOF
 update notice set startUserId=-1 and userId=-1 where startUserId=$startUserId and userId=$userId and type=$type and postId=$postId;
@@ -173,14 +172,12 @@ EOF;
             $result->setResult("fail");
         }
         return $result;
-
-
     }
 
 
 
 
-    public function selectThumbNotice($userId){
+    public function selectNewThumbNotice($userId){
         $noticeArray=array();
         $sql=<<<EOF
 select * from notice where userId=$userId and type like '%点赞' and isRead=0;
@@ -197,9 +194,83 @@ EOF;
             array_push($noticeArray,$notice);
         }
         return $noticeArray;
-
-
     }
+
+    public function selectNewCommentNotice($userId){
+        $noticeArray=array();
+        $sql=<<<EOF
+select * from notice where userId=$userId and type like '%评论' and isRead=0;
+EOF;
+        $result = $this->db->query($sql);
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $notice=new Notice();
+            $notice->setId($row['id']);
+            $notice->setUserId($row['userId']);
+            $notice->setStartUserId($row['startUserId']);
+            $notice->setType($row['type']);
+            $notice->setPostId($row['postId']);
+            $notice->setContent($row['content']);
+            array_push($noticeArray,$notice);
+        }
+        return $noticeArray;
+    }
+
+    public function selectOldThumbNotice($userId){
+        $noticeArray=array();
+        $sql=<<<EOF
+select * from notice where userId=$userId and type like '%点赞' and isRead=1;
+EOF;
+        $result = $this->db->query($sql);
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $notice=new Notice();
+            $notice->setId($row['id']);
+            $notice->setUserId($row['userId']);
+            $notice->setStartUserId($row['startUserId']);
+            $notice->setType($row['type']);
+            $notice->setPostId($row['postId']);
+            $notice->setContent($row['content']);
+            array_push($noticeArray,$notice);
+        }
+        return $noticeArray;
+    }
+
+    public function selectOldCommentNotice($userId){
+        $noticeArray=array();
+        $sql=<<<EOF
+select * from notice where userId=$userId and type like '%评论' and isRead=1;
+EOF;
+        $result = $this->db->query($sql);
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $notice=new Notice();
+            $notice->setId($row['id']);
+            $notice->setUserId($row['userId']);
+            $notice->setStartUserId($row['startUserId']);
+            $notice->setType($row['type']);
+            $notice->setPostId($row['postId']);
+            $notice->setContent($row['content']);
+            array_push($noticeArray,$notice);
+        }
+        return $noticeArray;
+    }
+
+    public function setIsReadTrue($noticeIdArray){
+//        $isArray=strpos($noticeIdArray,",");
+//        echo $isArray;
+        $noticeIdArray=explode(',',$noticeIdArray);
+//        foreach ($noticeIdArray as $noticeId){
+//            $sql=<<<EOF
+//update notice set isRead=1 where id=$noticeId;
+//EOF;
+//            $res=$this->db->exec($sql);
+////            echo $noticeId;
+//        }
+//        return
+        $result=new ResultMessage();
+        $result->setResult("success");
+        return $result;
+    }
+
+
 
     private function modifyText($text){
         return "'".$text."'";

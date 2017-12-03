@@ -48,7 +48,11 @@ RewriteRule ^api/get/explore/model/new$ controller/UserController.php?option=get
 
 #notice
 RewriteRule ^api/post/notice$ controller/NoticeController.php?option=getNotice [nc,qsa]
-RewriteRule ^api/post/thumbNotice$ controller/NoticeController.php?option=getThumbNotice [nc,qsa]
+RewriteRule ^api/post/thumbNotice/new$ controller/NoticeController.php?option=getNewThumbNotice [nc,qsa]
+RewriteRule ^api/post/thumbNotice/old$ controller/NoticeController.php?option=getOldThumbNotice [nc,qsa]
+RewriteRule ^api/post/CommentNotice/new$ controller/NoticeController.php?option=getNewCommentNotice [nc,qsa]
+RewriteRule ^api/post/CommentNotice/old$ controller/NoticeController.php?option=getOldCommentNotice [nc,qsa]
+RewriteRule ^api/post/notice/setAllIsReadTrue$ controller/NoticeController.php?option=setAllIsReadTrue [nc,qsa]
 RewriteRule ^api/get/shareByShareId/([0-9]+)$ controller/ShareController.php?option=getShareByShareId&shareId=$1 [nc,qsa]
 
 #hot

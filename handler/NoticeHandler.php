@@ -32,11 +32,43 @@ class noticeHandler extends SimpleHandler{
 
     }
 
-    public function getThumbNotice(){
+    public function getNewThumbNotice(){
         if (isset($_POST['userId'])) {
             $userId = $_POST['userId'];
         }
-        $result=$this->noticeData->selectThumbNotice($userId);
+        $result=$this->noticeData->selectNewThumbNotice($userId);
+        echo json_encode($result);
+    }
+
+    public function getNewCommentNotice(){
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result=$this->noticeData->selectNewCommentNotice($userId);
+        echo json_encode($result);
+    }
+
+    public function getOldThumbNotice(){
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result=$this->noticeData->selectOldThumbNotice($userId);
+        echo json_encode($result);
+    }
+
+    public function getOldCommentNotice(){
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result=$this->noticeData->selectOldCommentNotice($userId);
+        echo json_encode($result);
+    }
+
+    public function setAllIsReadTrue(){
+        if (isset($_POST['noticeIdArray'])) {
+            $noticeIdArray = $_POST['noticeIdArray'];
+        }
+        $result=$this->noticeData->setIsReadTrue($noticeIdArray);
         echo json_encode($result);
     }
 
@@ -71,6 +103,9 @@ class noticeHandler extends SimpleHandler{
     }
 
     public function addShareComment(){
+        if (isset($_POST['startUserId'])) {
+            $startUserId=$_POST['startUserId'];
+        }
         if (isset($_POST['userId'])) {
             $userId=$_POST['userId'];
         }
@@ -83,7 +118,7 @@ class noticeHandler extends SimpleHandler{
         if (isset($_POST['content'])) {
             $content = $_POST['content'];
         }
-        $result=$this->noticeData->insertShareComment($userId,$replyShareId,$replyCommentId,$content);
+        $result=$this->noticeData->insertShareComment($startUserId,$userId,$replyShareId,$replyCommentId,$content);
         echo json_encode($result);
 
     }

@@ -21,8 +21,24 @@ switch ($option) {
         $noticeHandler->getNotice();
         break;
 
-    case "getThumbNotice":
-        $noticeHandler->getThumbNotice();
+    case "getNewThumbNotice":
+        $noticeHandler->getNewThumbNotice();
+        break;
+
+    case "getNewCommentNotice":
+        $noticeHandler->getNewCommentNotice();
+        break;
+
+    case "getOldThumbNotice":
+        $noticeHandler->getOldThumbNotice();
+        break;
+
+    case "getOldCommentNotice":
+        $noticeHandler->getOldCommentNotice();
+        break;
+
+    case "setAllIsReadTrue":
+        $noticeHandler->setAllIsReadTrue();
         break;
 
     case "doShareThumb":
