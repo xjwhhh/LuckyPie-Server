@@ -19,18 +19,6 @@ class noticeHandler extends SimpleHandler{
     {
         $this->noticeData = new NoticeData();
     }
-    public function getNotice(){
-
-
-    }
-
-    public function addNotice(){
-
-    }
-
-    public function deleteNotice(){
-
-    }
 
     public function getNewThumbNotice(){
         if (isset($_POST['userId'])) {
@@ -128,6 +116,38 @@ class noticeHandler extends SimpleHandler{
             $shareId=$_POST['shareId'];
         }
         $result=$this->noticeData->selectShareCommentByShareId($shareId);
+
+        echo json_encode($result);
+    }
+
+
+    public function addAlbumComment(){
+        if (isset($_POST['startUserId'])) {
+            $startUserId=$_POST['startUserId'];
+        }
+        if (isset($_POST['userId'])) {
+            $userId=$_POST['userId'];
+        }
+        if (isset($_POST['replyAlbumId'])) {
+            $replyAlbumId = $_POST['replyAlbumId'];
+        }
+        if (isset($_POST['replyCommentId'])) {
+            $replyCommentId = $_POST['replyCommentId'];
+        }
+        if (isset($_POST['content'])) {
+            $content = $_POST['content'];
+        }
+        $result=$this->noticeData->insertAlbumComment($startUserId,$userId,$replyAlbumId,$replyCommentId,$content);
+        echo json_encode($result);
+
+    }
+
+
+    public function getAlbumComment(){
+        if (isset($_POST['albumId'])) {
+            $albumId=$_POST['albumId'];
+        }
+        $result=$this->noticeData->selectAlbumCommentByAlbumId($albumId);
 
         echo json_encode($result);
     }

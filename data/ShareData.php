@@ -161,13 +161,14 @@ EOF;
         }
     }
 
-    public function selectShareDataByShareId($shareId){
-        $sql=<<<EOF
+    public function selectShareDataByShareId($shareId)
+    {
+        $share = new Share();
+        $sql = <<<EOF
 select * from share where id=$shareId;
 EOF;
         $res = $this->db->query($sql);
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-            $share = new Share();
             $share->setId($row['id']);
             $share->setUserId($row['userId']);
             $share->setDesc($row['description']);
@@ -227,40 +228,37 @@ EOF;
 
     public function selectHotShares()
     {
-        //todo 一个思路，仅先获取shareIdArray，除重后再用shareId获取所有信息
-        $shareArray = array();
+        $shareIdArray = array();
         $timeLimit = date("Y-m-d H:i:s", strtotime("-1 day"));
+        $timeLimit = "'" . $timeLimit . "'";
         //12小时内点赞降序排列
         $sql = <<<EOF
-      SELECT s.id,s.userId,s.description,s.postTime,s.postAddress,s.forwareShareId,count(t.userId) thumbCounts
-      from share s ,thumb t where s.shareId=t.shareId and s.postTime> $timeLimit order by thumbCounts desc;
+      SELECT s.id,sum(s.id) thumbCounts
+      from share s ,thumb t where s.id=t.shareId and s.postTime> $timeLimit
+      GROUP by s.id
+      order by thumbCounts desc;
 EOF;
         $res = $this->db->query($sql);
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-            $share = new Share();
-            $share->setId($row['id']);
-            $share->setUserId($row['userId']);
-            $share->setDesc($row['description']);
-            $share->setPostTime($row['postTime']);
-            $share->setPostAddress($row['postAddress']);
-            $share->setForwardShareId($row['forwardShareId']);
-            array_push($shareArray, $share);
+            array_push($shareIdArray, $row['id']);
         }
         //12小时内评论降序排列
         $sql = <<<EOF
-      SELECT s.id,s.userId,s.description,s.postTime,s.postAddress,s.forwareShareId,count(c.id) commentCounts
-      from share s ,comment c where s.shareId=c.replyShareId and s.postTime> $timeLimit order by commentCounts desc;
+      SELECT s.id,sum(s.id) commentCounts
+      from share s ,shareComment c where s.id=c.replyShareId and s.postTime> $timeLimit 
+      GROUP by s.id
+      order by commentCounts desc;
 EOF;
         $res = $this->db->query($sql);
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-            $share = new Share();
-            $share->setId($row['id']);
-            $share->setUserId($row['userId']);
-            $share->setDesc($row['description']);
-            $share->setPostTime($row['postTime']);
-            $share->setPostAddress($row['postAddress']);
-            $share->setForwardShareId($row['forwardShareId']);
+            array_push($shareIdArray, $row['id']);
+        }
+        $shareIdArray = array_unique($shareIdArray);
+        $shareArray = array();
+        foreach ($shareIdArray as $shareId) {
+            $share = $this->selectShareDataByShareId($shareId);
             array_push($shareArray, $share);
+
         }
         return $shareArray;
     }
@@ -349,9 +347,9 @@ EOF;
             $shareArray = array_merge_recursive($shareArray, $result);
         }
 //        print_r($shareArray);
-        foreach ($shareArray as $share){
-            $shareId=$share->getId();
-            $sql=<<<EOF
+        foreach ($shareArray as $share) {
+            $shareId = $share->getId();
+            $sql = <<<EOF
 select * from thumb where userId=$userId and shareId=$shareId;
 EOF;
 
@@ -364,9 +362,6 @@ EOF;
         return $shareArray;
         //todo 按时间排序
     }
-
-
-
 
 
     public function getUserLikes($userId)

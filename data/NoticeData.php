@@ -62,39 +62,16 @@ EOF;
         $sql = <<<EOF
 insert into shareComment (userId,replyShareId,replyCommentId,content,times) values ($startUserId,$replyShareId,$replyCommentId,$content,$time);
 EOF;
-//        }
-//        else{
-//            $replyShareId=-1;
-//            $sql=<<<EOF
-//insert into shareComment (userId,replyShareId,replyCommentId,content) values ($userId,$replyShareId,$replyCommentId,$content);
-//EOF;
-//        }
         $res = $this->db->exec($sql);
         if ($res) {
-//            $sql=<<<EOF
-//select * from shareComment where userId=$userId and replyShareId=$replyShareId and replyCommentId=$replyCommentId;
-//EOF;
-//            $result=$this->db->query($sql);
-//            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-//$returnComment->setId($row['id']);
-//$returnComment->setUserId($row['userId']);
-//
-//
-//            }
             $insertNoticeRes=$this->insertNotice($startUserId,$userId,"分享评论",$replyShareId,$content);
             if($insertNoticeRes->getResult()=="success"){
                 $resultMessage->setResult("success");
             }
-
-
-
-
         } else {
             $resultMessage->setResult("fail");
         }
         return $resultMessage;
-//        return  $returnComment;
-
     }
 
     public function selectShareCommentByShareId($shareId)
@@ -112,9 +89,7 @@ EOF;
             $comment->setReplyCommentId($row['replyCommentId']);
             $comment->setContent($row['content']);
             $comment->setTimes($row['times']);
-
             $userId=$comment->getUserId();
-
             $userSql=<<<EOF
 select name from user where id=$userId;
 EOF;
@@ -122,14 +97,62 @@ EOF;
             while($userRow = $res->fetchArray(SQLITE3_ASSOC)){
                 $comment->setUserName($userRow['name']);
             }
-
-
             array_push($commentArray,$comment);
         }
-
         return $commentArray;
+    }
 
+    public function insertAlbumComment($startUserId,$userId, $replyAlbumId, $replyCommentId, $content)
+    {
+        $content = $this->modifyText($content);
+        $resultMessage = new ResultMessage();
+        if ($replyCommentId == "") {
+            $replyCommentId = -1;
+        }
+        date_default_timezone_set("Asia/Shanghai");
+        $time=date('Y-m-d H:i:s', time());
+        $time="'".$time."'";
+        $sql = <<<EOF
+insert into albumComment (userId,replyAlbumId,replyCommentId,content,times) values ($startUserId,$replyAlbumId,$replyCommentId,$content,$time);
+EOF;
+        $res = $this->db->exec($sql);
+        if ($res) {
+            $insertNoticeRes=$this->insertNotice($startUserId,$userId,"相册评论",$replyAlbumId,$content);
+            if($insertNoticeRes->getResult()=="success"){
+                $resultMessage->setResult("success");
+            }
+        } else {
+            $resultMessage->setResult("fail");
+        }
+        return $resultMessage;
+    }
 
+    public function selectAlbumCommentByAlbumId($albumId)
+    {
+        $commentArray = array();
+        $sql = <<<EOF
+select * from albumComment where replyAlbumId=$albumId;
+EOF;
+        $result = $this->db->query($sql);
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $comment = new Comment();
+            $comment->setId($row['id']);
+            $comment->setUserId($row['userId']);
+            $comment->setReplyPostId($row['replyAlbumId']);
+            $comment->setReplyCommentId($row['replyCommentId']);
+            $comment->setContent($row['content']);
+            $comment->setTimes($row['times']);
+            $userId=$comment->getUserId();
+            $userSql=<<<EOF
+select name from user where id=$userId;
+EOF;
+            $res=$this->db->query($userSql);
+            while($userRow = $res->fetchArray(SQLITE3_ASSOC)){
+                $comment->setUserName($userRow['name']);
+            }
+            array_push($commentArray,$comment);
+        }
+        return $commentArray;
     }
 
 

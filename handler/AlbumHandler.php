@@ -21,8 +21,13 @@ class albumHandler extends SimpleHandler
         $this->albumData = new AlbumData();
     }
 
-    public function getAlbum()
+    public function getAlbumByAlbumId()
     {
+        if (isset($_GET['albumId'])) {
+            $albumId = $_GET['albumId'];
+        }
+        $result=$this->albumData->selectAlbumByAlbumId($albumId);
+        echo json_encode($result);
 
     }
 

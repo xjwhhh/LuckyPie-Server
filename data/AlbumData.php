@@ -22,6 +22,7 @@ class AlbumData
 
     private function getAlbumImagesAndTags($album){
         $albumId = $album->getId();
+//        echo $albumId;
         //获取photo
         $photoArray = array();
         $photoSql = <<<EOF
@@ -234,26 +235,31 @@ EOF;
             return "success";
         }
     }
-//
-//    public function getUserAlbumByUserId($userId)
-//    {
-//        $albumArray = array();
-//        $sql = <<<EOF
-//      SELECT * from album where userId=$userId;
-//EOF;
-//        $res = $this->db->query($sql);
-//        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-//            $album = new Album();
-//            $album->setId($row['id']);
-//            $album->setUserId($row['userId']);
-//            $album->setName($row['title']);
-//            $album->setDesc($row['description']);
-//            $album->setCreateTime($row['createTime']);
-//            $album->setUpdateTime($row['updateTime']);
-//            array_push($albumArray, $album);
-//        }
-//        return $albumArray;
-//    }
+
+
+public function selectAlbumByAlbumId($albumId){
+    $album = new Album();
+    $sql=<<<EOF
+select * from album where id=$albumId;
+EOF;
+    $res = $this->db->query($sql);
+    while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+        $album->setId($row['id']);
+        $album->setUserId($row['userId']);
+        $album->setName($row['title']);
+        $album->setDesc($row['description']);
+        $album->setCreateTime($row['createTime']);
+        $album->setUpdateTime($row['updateTime']);
+//        echo "ert";
+        $album=$this->getAlbumImagesAndTags($album);
+    }
+
+    return $album;
+
+
+
+
+    }
 
 
 }

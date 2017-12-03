@@ -11,25 +11,29 @@ if (isset($_GET["option"]))
     $option = $_GET["option"];
 if (isset($_POST["option"]))
     $option = $_POST["option"];
+$albumHandler = new AlbumHandler();
+
 
 switch ($option) {
     case "upload":
-        $albumHandler = new AlbumHandler();
         $albumHandler->addAlbum();
         break;
 
     case "update":
-        $albumHandler = new AlbumHandler();
         $albumHandler->updateAlbum();
         break;
 
     case "delete":
-        $albumHandler = new AlbumHandler();
         $albumHandler->deleteAlbum();
         break;
 
     case "getUserAlbum":
-        $albumHandler = new AlbumHandler();
         $albumHandler->getUserAlbums();
         break;
+
+    case "getAlbumByAlbumId":
+        $albumHandler->getAlbumByAlbumId();
+        break;
+
+
 }

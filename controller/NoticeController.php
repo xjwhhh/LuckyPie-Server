@@ -57,5 +57,14 @@ switch ($option) {
         $noticeHandler->addShareComment();
         break;
 
+    case "doAlbumComment":
+        $noticeHandler->addAlbumComment();
+        break;
+
+    case "getAlbumComment":
+        $noticeHandler->getAlbumComment();
+        break;
+
+
 
 }

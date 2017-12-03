@@ -257,6 +257,27 @@ if (!$db) {
 //}
 //$db->close();
 
+
+//create table comment
+$sql= <<<EOF
+      CREATE TABLE albumComment
+      (id INTEGER PRIMARY KEY autoincrement,
+      userId int not null,
+      replyAlbumId int not null,
+      replyCommentId int not null,
+      content text,
+      times varchar(255) not null
+      );
+EOF;
+
+$ret = $db->exec($sql);
+if (!$ret) {
+    echo $db->lastErrorMsg();
+} else {
+    echo "Records created successfully\n";
+}
+$db->close();
+
 ////create table tag
 //$sql= <<<EOF
 //      CREATE TABLE tag

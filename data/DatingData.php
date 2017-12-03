@@ -20,6 +20,7 @@ class DatingData
     //对dating的操作涉及三个表,dating,datingPhoto,datingTag
 
     private function getDatingImagesAndTags($dating){
+//        echo "ety";
         $datingId=$dating->getId();
         //获取photo
         $photoArray = array();
@@ -40,12 +41,14 @@ EOF;
         while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
             array_push($tagArray, $tagRow['type']);
         }
+//        print_r($tagArray);
         $dating->setTags($tagArray);
         return $dating;
     }
 
     public function insertDating($dating)
     {
+
         $returnDating = new Dating();
         $userId = $dating->getUserId();
         $description = $dating->getDesc();
@@ -56,6 +59,9 @@ EOF;
         $postAddress = $dating->getPostAddress();
         $photoArray = $dating->getImageUrls();
         $tagArray = $dating->getTags();
+
+//        echo $photoTime;
+
 
         $description = "'" . $description . "'";
         $postTime = "'" . $postTime . "'";
@@ -85,6 +91,7 @@ EOF;
                 $returnDating->setPostAddress($row['postAddress']);
             }
         }
+//        echo $returnDating->getPhotoTime();
 
         $datingId = $returnDating->getId();
 
@@ -156,6 +163,7 @@ EOF;
             while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
                 $tagId = $tagRow['id'];
             }
+//            echo $tagId;
             $datingTagSql = <<<EOF
 insert into datingTag values ($datingId,$tagId);
 EOF;
@@ -165,6 +173,10 @@ EOF;
             }
 
         }
+
+        $returnDating->setTags($tagArray);
+//        $returnDating=$this->getDatingImagesAndTags($returnDating);
+
         return $returnDating;
 
 

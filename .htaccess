@@ -54,6 +54,7 @@ RewriteRule ^api/post/CommentNotice/new$ controller/NoticeController.php?option=
 RewriteRule ^api/post/CommentNotice/old$ controller/NoticeController.php?option=getOldCommentNotice [nc,qsa]
 RewriteRule ^api/post/notice/setAllIsReadTrue$ controller/NoticeController.php?option=setAllIsReadTrue [nc,qsa]
 RewriteRule ^api/get/shareByShareId/([0-9]+)$ controller/ShareController.php?option=getShareByShareId&shareId=$1 [nc,qsa]
+RewriteRule ^api/get/albumByAlbumId/([0-9]+)$ controller/AlbumController.php?option=getAlbumByAlbumId&albumId=$1 [nc,qsa]
 
 #hot
 RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShare [nc,qsa]
@@ -66,5 +67,7 @@ RewriteRule ^api/post/share/cancelThumb$ controller/NoticeController.php?option=
 
 RewriteRule ^api/post/share/doComment$ controller/NoticeController.php?option=doShareComment [nc,qsa]
 RewriteRule ^api/post/share/comment$ controller/NoticeController.php?option=getShareComment [nc,qsa]
+RewriteRule ^api/post/album/doComment$ controller/NoticeController.php?option=doAlbumComment [nc,qsa]
+RewriteRule ^api/post/album/comment$ controller/NoticeController.php?option=getAlbumComment [nc,qsa]
 
 
