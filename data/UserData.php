@@ -343,15 +343,19 @@ EOF;
     {
         $userArray = array();
         //todo 点赞最多的一千个模特，随机选一百个展现
-        $sql = <<<EOF
-      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
-       from user,thumb 
-       where identity="模特" and user.id=thumb.userId
-       group by user.id
-       order by num
-       limit 1000
-       ;
+//        $sql = <<<EOF
+//      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
+//       from user,thumb
+//       where identity="模特" and user.id=thumb.userId
+//       group by user.id
+//       order by num
+//       limit 1000
+//       ;
+//EOF;
+        $sql=<<<EOF
+select * from user where identity="模特";
 EOF;
+
         $ret = $this->db->query($sql);
         while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
             $user = new User();
