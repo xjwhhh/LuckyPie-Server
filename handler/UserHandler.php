@@ -151,6 +151,18 @@ class UserHandler extends SimpleHandler
         echo json_encode($result);
     }
 
+    public function removeFollow()
+    {
+        if (isset($_POST["followId"])) {
+            $followId = $_POST["followId"];
+        }
+        if (isset($_POST["followerId"])) {
+            $followerId = $_POST["followerId"];
+        }
+        $result=$this->userData->removeFollow($followId, $followerId);
+        echo json_encode($result);
+    }
+
     public function isFollow(){
         if (isset($_POST["userId"])) {
             $userId = $_POST["userId"];

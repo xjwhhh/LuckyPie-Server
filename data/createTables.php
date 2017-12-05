@@ -225,7 +225,8 @@ if (!$db) {
 //$sql= <<<EOF
 //      CREATE TABLE thumb
 //      (userId int not null,
-//      shareId int not null
+//      shareId int not null,
+//      thumbUserId int not null
 //      );
 //EOF;
 //
@@ -259,24 +260,24 @@ if (!$db) {
 
 
 //create table comment
-$sql= <<<EOF
-      CREATE TABLE albumComment
-      (id INTEGER PRIMARY KEY autoincrement,
-      userId int not null,
-      replyAlbumId int not null,
-      replyCommentId int not null,
-      content text,
-      times varchar(255) not null
-      );
-EOF;
-
-$ret = $db->exec($sql);
-if (!$ret) {
-    echo $db->lastErrorMsg();
-} else {
-    echo "Records created successfully\n";
-}
-$db->close();
+//$sql= <<<EOF
+//      CREATE TABLE albumComment
+//      (id INTEGER PRIMARY KEY autoincrement,
+//      userId int not null,
+//      replyAlbumId int not null,
+//      replyCommentId int not null,
+//      content text,
+//      times varchar(255) not null
+//      );
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Records created successfully\n";
+//}
+//$db->close();
 
 ////create table tag
 //$sql= <<<EOF

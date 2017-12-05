@@ -61,6 +61,7 @@ RewriteRule ^api/get/hotshare$ controller/ShareController.php?option=getHotShare
 
 
 RewriteRule ^api/post/follow$ controller/UserController.php?option=follow [nc,qsa]
+RewriteRule ^api/post/removeFollow$ controller/UserController.php?option=removeFollow [nc,qsa]
 RewriteRule ^api/post/isFollow$ controller/UserController.php?option=isFollow [nc,qsa]
 RewriteRule ^api/get/follow/([0-9]+)$ controller/UserController.php?option=getFollow&userId=$1 [nc,qsa]
 RewriteRule ^api/get/follower/([0-9]+)$ controller/UserController.php?option=getFollower&userId=$1 [nc,qsa]

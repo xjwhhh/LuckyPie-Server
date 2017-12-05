@@ -67,6 +67,10 @@ switch ($option){
         $userHandler->follow();
         break;
 
+    case "removeFollow":
+        $userHandler->removeFollow();
+        break;
+
     case "isFollow":
         $userHandler->isFollow();
         break;

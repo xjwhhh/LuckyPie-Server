@@ -217,7 +217,7 @@ EOF;
     public function selectHotPhotographer()
     {
         $userArray = array();
-        //todo 应该是被点赞最多的，所以thumb里最好存储被点赞的userId
+
         //todo 点赞最多的一千个摄影师，随机选一百个展现
 //        $sql = <<<EOF
 //      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
@@ -263,11 +263,11 @@ EOF;
     public function selectBestPhotographer()
     {
         $userArray = array();
-        //todo 点赞数最高的100个摄影师
+        //被点赞数最高的100个摄影师
         $sql = <<<EOF
       SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
        from user,thumb 
-       where identity="摄影师" and user.id=thumb.userId
+       where identity="摄影师" and user.id=thumb.thumbUserId
        group by user.id
        order by num
        limit 100
@@ -303,7 +303,7 @@ EOF;
     public function selectNewPhotographer()
     {
         $userArray = array();
-        //todo 最近一百个注册的摄影师
+        //最近一百个注册的摄影师
         $sql = <<<EOF
       SELECT *
       from user
@@ -343,18 +343,18 @@ EOF;
     {
         $userArray = array();
         //todo 点赞最多的一千个模特，随机选一百个展现
-//        $sql = <<<EOF
-//      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
-//       from user,thumb
-//       where identity="模特" and user.id=thumb.userId
-//       group by user.id
-//       order by num
-//       limit 1000
-//       ;
-//EOF;
-        $sql=<<<EOF
-select * from user where identity="模特";
+        $sql = <<<EOF
+      SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
+       from user,thumb
+       where identity="模特" and user.id=thumb.userId
+       group by user.id
+       order by num
+       limit 1000
+       ;
 EOF;
+//        $sql=<<<EOF
+//select * from user where identity="模特";
+//EOF;
 
         $ret = $this->db->query($sql);
         while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
@@ -388,7 +388,7 @@ EOF;
         $userArray = array();
         //todo 点赞最多的一百个模特
         $sql = <<<EOF
-      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
+      SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
        from user,thumb 
        where identity="模特" and user.id=thumb.userId
        group by user.id
@@ -478,6 +478,23 @@ EOF;
         return $resultMessage;
     }
 
+    public function removeFollow($followId,$followerId){
+        $resultMessage=new ResultMessage();
+        $sql=<<<EOF
+update follow set followId=-1 and followerId=-1 where followId=$followId and followerId=$followerId;
+EOF;
+        $ret = $this->db->exec($sql);
+        if($ret){
+            $resultMessage->setResult("success");
+
+        }else{
+            $resultMessage->setResult("fail");
+        }
+        return $resultMessage;
+
+
+    }
+
     public function isFollow($userId,$checkUserId){
         $resultMessage=new ResultMessage();
         $resultMessage->setResult("fail");
@@ -516,6 +533,8 @@ EOF;
         $followerIdArray=array_unique($followerIdArray);
         return $followerIdArray;
     }
+
+
 }
 
 

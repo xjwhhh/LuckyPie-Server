@@ -22,7 +22,7 @@ class NoticeData
     public function insertShareThumb($startUserId,$userId, $shareId)
     {
         $sql = <<<EOF
-insert into thumb (userId,shareId) values ($startUserId,$shareId);
+insert into thumb (userId,shareId,thumbUserId) values ($startUserId,$shareId,$userId);
 EOF;
         $res = $this->db->exec($sql);
         if($res) {
@@ -36,7 +36,7 @@ EOF;
     public function cancelShareThumb($startUserId,$userId, $shareId)
     {
         $sql = <<<EOF
-update thumb set userId=-1,shareId=-1 where userId=$startUserId and shareId=$shareId;
+update thumb set userId=-1,shareId=-1,thumbUserId=-1 where userId=$startUserId and shareId=$shareId and thumbUserId=$userId;
 EOF;
         $res = $this->db->exec($sql);
         if ($res) {
