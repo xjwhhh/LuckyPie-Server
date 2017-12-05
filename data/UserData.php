@@ -534,6 +534,41 @@ EOF;
         return $followerIdArray;
     }
 
+    public function selectUserBySearch($content){
+        $content="%".$content."%";
+        $content="'".$content."'";
+        $userArray=array();
+        $sql=<<<EOF
+select * from user where name like $content or introduction like $content;
+EOF;
+
+        $ret = $this->db->query($sql);
+        while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+            $user = new User();
+            $user->setId($row['id']);
+            $user->setAccount($row['account']);
+            $user->setPassword($row['password']);
+            $user->setAuthority($row['authority']);
+            $user->setName($row['name']);
+            $user->setHead($row['head']);
+            $user->setIdentity($row['identity']);
+            $user->setIntroduction($row['introduction']);
+            $user->setGender($row['gender']);
+            if ($row['telephone'] == "-1") {
+                $user->setTelephone(null);
+            } else {
+                $user->setTelephone($row['telephone']);
+            }
+            if ($row['email'] == "-1") {
+                $user->setEmail(null);
+            } else {
+                $user->setEmail($row['email']);
+            }
+            array_push($userArray, $user);
+        }
+        return $userArray;
+    }
+
 
 }
 

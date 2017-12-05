@@ -22,7 +22,6 @@ class UserHandler extends SimpleHandler
         $this->userData = new UserData();
     }
 
-    //post:account,password
     public function login()
     {
         if (isset($_POST["account"])) {
@@ -35,7 +34,6 @@ class UserHandler extends SimpleHandler
         echo json_encode($user);
     }
 
-    //post:account,password
     public function register()
     {
         if (isset($_POST["account"])) {
@@ -49,7 +47,6 @@ class UserHandler extends SimpleHandler
 
     }
 
-    //get:id
     public function getUserInfo()
     {
         if (isset($_GET["id"])) {
@@ -109,7 +106,6 @@ class UserHandler extends SimpleHandler
     {
         $result = $this->userData->selectBestPhotographer();
         echo json_encode($result);
-
     }
 
 
@@ -117,7 +113,6 @@ class UserHandler extends SimpleHandler
     {
         $result = $this->userData->selectNewPhotographer();
         echo json_encode($result);
-
     }
 
 
@@ -187,6 +182,14 @@ class UserHandler extends SimpleHandler
             $userId = $_GET["userId"];
         }
         $result=$this->userData->getFollower($userId);
+        echo json_encode($result);
+    }
+
+    public function searchUser(){
+        if (isset($_POST["content"])) {
+            $content = $_POST["content"];
+        }
+        $result=$this->userData->selectUserBySearch($content);
         echo json_encode($result);
     }
 

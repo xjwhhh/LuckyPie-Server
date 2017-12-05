@@ -76,3 +76,11 @@ RewriteRule ^api/post/album/doComment$ controller/NoticeController.php?option=do
 RewriteRule ^api/post/album/comment$ controller/NoticeController.php?option=getAlbumComment [nc,qsa]
 
 
+RewriteRule ^api/post/search/user$ controller/UserController.php?option=search [nc,qsa]
+RewriteRule ^api/post/search/album$ controller/AlbumController.php?option=search [nc,qsa]
+RewriteRule ^api/post/search/dating$ controller/DatingController.php?option=search [nc,qsa]
+RewriteRule ^api/post/search/share$ controller/ShareController.php?option=search [nc,qsa]
+
+
+
+

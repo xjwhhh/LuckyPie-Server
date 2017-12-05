@@ -83,6 +83,10 @@ switch ($option){
         $userHandler->getFollower();
         break;
 
+    case "search":
+        $userHandler->searchUser();
+        break;
+
 }
 
 
