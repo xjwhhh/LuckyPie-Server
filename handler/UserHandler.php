@@ -151,5 +151,31 @@ class UserHandler extends SimpleHandler
         echo json_encode($result);
     }
 
+    public function isFollow(){
+        if (isset($_POST["userId"])) {
+            $userId = $_POST["userId"];
+        }
+        if (isset($_POST["checkUserId"])) {
+            $checkUserId = $_POST["checkUserId"];
+        }
+        $result=$this->userData->isFollow($userId,$checkUserId);
+        echo json_encode($result);
+    }
+
+    public function getFollow(){
+        if (isset($_GET["userId"])) {
+            $userId = $_GET["userId"];
+        }
+        $result=$this->userData->getFollow($userId);
+        echo json_encode($result);
+    }
+
+    public function getFollower(){
+        if (isset($_GET["userId"])) {
+            $userId = $_GET["userId"];
+        }
+        $result=$this->userData->getFollower($userId);
+        echo json_encode($result);
+    }
 
 }

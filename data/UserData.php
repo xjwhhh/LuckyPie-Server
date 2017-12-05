@@ -265,7 +265,7 @@ EOF;
         $userArray = array();
         //todo 点赞数最高的100个摄影师
         $sql = <<<EOF
-      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
+      SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
        from user,thumb 
        where identity="摄影师" and user.id=thumb.userId
        group by user.id
@@ -476,6 +476,45 @@ EOF;
             $resultMessage->setResult("fail");
         }
         return $resultMessage;
+    }
+
+    public function isFollow($userId,$checkUserId){
+        $resultMessage=new ResultMessage();
+        $resultMessage->setResult("fail");
+        $sql=<<<EOF
+select * from follow where followerId=$userId and followId=$checkUserId;
+EOF;
+        $ret = $this->db->query($sql);
+        while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+            $resultMessage->setResult("success");
+        }
+        return $resultMessage;
+    }
+
+    public function getFollow($userId){
+        $followIdArray=array();
+        $sql=<<<EOF
+select followId from follow where followerId=$userId;
+EOF;
+        $ret = $this->db->query($sql);
+        while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+           array_push($followIdArray,$row['followId']);
+        }
+        $followIdArray=array_unique($followIdArray);
+        return $followIdArray;
+    }
+
+    public function getFollower($userId){
+        $followerIdArray=array();
+        $sql=<<<EOF
+select followerId from follow where followId=$userId;
+EOF;
+        $ret = $this->db->query($sql);
+        while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+            array_push($followerIdArray,$row['followerId']);
+        }
+        $followerIdArray=array_unique($followerIdArray);
+        return $followerIdArray;
     }
 }
 

@@ -66,6 +66,19 @@ switch ($option){
     case "follow":
         $userHandler->follow();
         break;
+
+    case "isFollow":
+        $userHandler->isFollow();
+        break;
+
+    case "getFollow":
+        $userHandler->getFollow();
+        break;
+
+    case "getFollower":
+        $userHandler->getFollower();
+        break;
+
 }
 
 
