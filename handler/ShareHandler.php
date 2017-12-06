@@ -130,5 +130,13 @@ class shareHandler extends SimpleHandler
         echo json_encode($result);
     }
 
+    public function searchShare(){
+        if (isset($_POST["content"])) {
+            $content = $_POST["content"];
+        }
+        $result=$this->shareData->selectShareBySearch($content);
+        echo json_encode($result);
+    }
+
 
 }

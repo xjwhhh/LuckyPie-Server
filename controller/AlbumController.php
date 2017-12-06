@@ -35,5 +35,9 @@ switch ($option) {
         $albumHandler->getAlbumByAlbumId();
         break;
 
+    case "search":
+        $albumHandler->searchAlbum();
+        break;
+
 
 }

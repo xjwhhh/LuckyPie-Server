@@ -261,10 +261,7 @@ EOF;
         $datingArrayCost = array();
         $datingArrayIdentity = array();
         $datingArrayGender = array();
-//        echo $address;
-//        echo $cost;
-//        echo $identity;
-//        echo $gender;
+
         //按地点筛选
         if ($address != "全部") {
             $address = "'" . $address . "'";
@@ -395,12 +392,10 @@ EOF;
             $datingArrayGender = $datingArrayIdentity;
         }
 
-//        echo json_encode($datingArrayCost);
-
         return $datingArrayGender;
     }
 
-    //
+
     public function selectFollowingDatingByUserId($userId, $groupName)
     {
         //获取分组关注
@@ -423,6 +418,35 @@ EOF;
 
 
     }
+
+    public function selectDatingBySearch($content)
+    {
+        $content = "%" . $content . "%";
+        $content = "'" . $content . "'";
+        $datingArray = array();
+        $sql = <<<EOF
+select * from dating where description like $content;
+EOF;
+
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $dating = new Dating();
+            $dating->setId($row['id']);
+            $dating->setUserId($row['userId']);
+            $dating->setDesc($row['description']);
+            $dating->setCost($row['cost']);
+            $dating->setPhotoTime($row['photoTime']);
+            $dating->setPostTime($row['postTime']);
+            $dating->setPhotoAddress($row['photoAddress']);
+            $dating->setPostAddress($row['postAddress']);
+            $dating = $this->getDatingImagesAndTags($dating);
+            array_push($datingArray, $dating);
+
+        }
+
+        return $datingArray;
+    }
+
 
 
 }

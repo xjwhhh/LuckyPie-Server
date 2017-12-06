@@ -68,4 +68,13 @@ class albumHandler extends SimpleHandler
         $result=$this->albumData->getUserAlbumByUserId($userId);
         echo json_encode($result);
     }
+
+    public function searchAlbum(){
+        if (isset($_POST["content"])) {
+            $content = $_POST["content"];
+        }
+        $result=$this->albumData->selectAlbumBySearch($content);
+        echo json_encode($result);
+    }
+
 }

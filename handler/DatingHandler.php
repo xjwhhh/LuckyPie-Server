@@ -104,4 +104,12 @@ class datingHandler extends SimpleHandler
 
     }
 
+    public function searchDating(){
+        if (isset($_POST["content"])) {
+            $content = $_POST["content"];
+        }
+        $result=$this->datingData->selectDatingBySearch($content);
+        echo json_encode($result);
+    }
+
 }

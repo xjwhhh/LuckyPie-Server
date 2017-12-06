@@ -441,4 +441,31 @@ EOF;
         $share->setTags($tagArray);
         return $share;
     }
+
+    public function selectShareBySearch($content){
+        $content="%".$content."%";
+        $content="'".$content."'";
+        $shareArray=array();
+        $sql=<<<EOF
+select * from share where description like $content;
+EOF;
+
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $share = new Share();
+            $share->setId($row['id']);
+            $share->setUserId($row['userId']);
+            $share->setDesc($row['description']);
+            $share->setPostTime($row['postTime']);
+            $share->setPostAddress($row['postAddress']);
+            $share->setForwardShareId($row['forwardShareId']);
+            $share=$this->getShareImagesAndTags($share);
+            array_push($shareArray,$share);
+        }
+
+        return $shareArray;
+
+    }
+
+
 }

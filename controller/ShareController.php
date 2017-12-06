@@ -59,4 +59,8 @@ switch ($option) {
         $shareHandler->getShareByShareId();
         break;
 
+    case "search":
+        $shareHandler->searchShare();
+        break;
+
 }

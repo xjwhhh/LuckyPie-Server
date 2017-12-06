@@ -12,35 +12,36 @@ if(isset($_GET["option"]))
 if(isset($_POST["option"]))
     $option = $_POST["option"];
 
+$datingHandler=new DatingHandler();
+
+
 switch ($option){
     case "upload":
-        $datingHandler=new DatingHandler();
         $datingHandler->addDating();
         break;
 
     case "update":
-        $datingHandler=new DatingHandler();
         $datingHandler->updateDating();
         break;
 
     case "delete":
-        $datingHandler=new DatingHandler();
         $datingHandler->deleteDating();
         break;
 
     case "getUserDating":
-        $datingHandler=new DatingHandler();
         $datingHandler->getUserDating();
         break;
 
     case "getFollowDating":
-        $datingHandler=new DatingHandler();
         $datingHandler->getFollowingDating();
         break;
 
     case "getExploreDating":
-        $datingHandler=new DatingHandler();
         $datingHandler->getExploreDating();
+        break;
+
+    case "search":
+        $datingHandler->searchDating();
         break;
 
 }

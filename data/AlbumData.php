@@ -20,7 +20,8 @@ class AlbumData
 
     //对album的操作涉及三个表,album,albumPhoto,albumTag
 
-    private function getAlbumImagesAndTags($album){
+    private function getAlbumImagesAndTags($album)
+    {
         $albumId = $album->getId();
 //        echo $albumId;
         //获取photo
@@ -143,20 +144,20 @@ EOF;
             //上传至服务器
             preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64Code, $result);
             $type = $result[2];
-            $catalog=date('Ymd', time()) . "/";
-            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" .$catalog ;
-            $http_file="http://localhost/LuckyPie-Server/photo/".$catalog;
+            $catalog = date('Ymd', time()) . "/";
+            $new_file = "C:/Apache24/htdocs/LuckyPie-Server/photo/" . $catalog;
+            $http_file = "http://localhost/LuckyPie-Server/photo/" . $catalog;
             if (!file_exists($new_file)) {
 //检查是否有该文件夹，如果没有就创建，并给予最高权限
                 mkdir($new_file, 0700);
             }
-            $time=time();
-            $new_file = $new_file . $time .$diff. ".{$type}";
-            $http_file = $http_file . $time .$diff. ".{$type}";
-            $diff=$diff+1;
+            $time = time();
+            $new_file = $new_file . $time . $diff . ".{$type}";
+            $http_file = $http_file . $time . $diff . ".{$type}";
+            $diff = $diff + 1;
             $base64Code = str_replace(" ", "+", $base64Code);
-            $tt=str_replace($result[1], '', $base64Code);
-            $ll=base64_decode($tt);
+            $tt = str_replace($result[1], '', $base64Code);
+            $ll = base64_decode($tt);
             file_put_contents($new_file, $ll);
             $now = date("Y-m-d H:i:s.u", time());
             $now = "'" . $now . "'";
@@ -211,7 +212,6 @@ EOF;
 
         }
         $returnAlbum->setTags($tagArray);
-//        print_r($returnAlbum);
         return $returnAlbum;
     }
 
@@ -237,28 +237,52 @@ EOF;
     }
 
 
-public function selectAlbumByAlbumId($albumId){
-    $album = new Album();
-    $sql=<<<EOF
+    public function selectAlbumByAlbumId($albumId)
+    {
+        $album = new Album();
+        $sql = <<<EOF
 select * from album where id=$albumId;
 EOF;
-    $res = $this->db->query($sql);
-    while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
-        $album->setId($row['id']);
-        $album->setUserId($row['userId']);
-        $album->setName($row['title']);
-        $album->setDesc($row['description']);
-        $album->setCreateTime($row['createTime']);
-        $album->setUpdateTime($row['updateTime']);
-//        echo "ert";
-        $album=$this->getAlbumImagesAndTags($album);
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $album->setId($row['id']);
+            $album->setUserId($row['userId']);
+            $album->setName($row['title']);
+            $album->setDesc($row['description']);
+            $album->setCreateTime($row['createTime']);
+            $album->setUpdateTime($row['updateTime']);
+            $album = $this->getAlbumImagesAndTags($album);
+        }
+
+        return $album;
+
+
     }
 
-    return $album;
+    public function selectAlbumBySearch($content)
+    {
+        $content = "%" . $content . "%";
+        $content = "'" . $content . "'";
+        $albumArray = array();
+        $sql = <<<EOF
+select * from album where description like $content;
+EOF;
 
+        $res = $this->db->query($sql);
+        while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+            $album = new Album();
+            $album->setId($row['id']);
+            $album->setUserId($row['userId']);
+            $album->setName($row['title']);
+            $album->setDesc($row['description']);
+            $album->setCreateTime($row['createTime']);
+            $album->setUpdateTime($row['updateTime']);
+            $album=$this->getAlbumImagesAndTags($album);
+            array_push($albumArray,$album);
 
+        }
 
-
+        return $albumArray;
     }
 
 
