@@ -421,8 +421,10 @@ EOF;
 
     public function selectDatingBySearch($content)
     {
-        $content = "%" . $content . "%";
-        $content = "'" . $content . "'";
+        $content=urldecode($content);
+
+        $content="%".$content."%";
+        $content="'".$content."'";
         $datingArray = array();
         $sql = <<<EOF
 select * from dating where description like $content;

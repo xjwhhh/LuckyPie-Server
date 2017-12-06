@@ -261,8 +261,10 @@ EOF;
 
     public function selectAlbumBySearch($content)
     {
-        $content = "%" . $content . "%";
-        $content = "'" . $content . "'";
+        $content=urldecode($content);
+
+        $content="%".$content."%";
+        $content="'".$content."'";
         $albumArray = array();
         $sql = <<<EOF
 select * from album where description like $content;

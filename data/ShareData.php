@@ -443,6 +443,8 @@ EOF;
     }
 
     public function selectShareBySearch($content){
+        $content=urldecode($content);
+
         $content="%".$content."%";
         $content="'".$content."'";
         $shareArray=array();

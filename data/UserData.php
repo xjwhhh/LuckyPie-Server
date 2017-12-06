@@ -535,6 +535,9 @@ EOF;
     }
 
     public function selectUserBySearch($content){
+
+        $content=urldecode($content);
+
         $content="%".$content."%";
         $content="'".$content."'";
         $userArray=array();
