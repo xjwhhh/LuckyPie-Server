@@ -7,6 +7,7 @@
  */
 require_once("connect.php");
 require_once(dirname(__FILE__) . '/../entity/Share.php');
+require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
 
 class ShareData
 {
@@ -146,19 +147,25 @@ EOF;
 
     public function deleteShareData($shareId)
     {
-        $sql = <<<EOF
-      DELETE from share where id=$shareId;
-      DELETE from sharePhoto where shareId=$shareId;
-      DELETE from shareTag where shareId=$shareId;
-      DELETE from thumb where shareId=$shareId;
-      DELETE from comment where replyShareId=$shareId;
+        $result=new ResultMessage();
+//        $sql = <<<EOF
+//update share set userId=-1,description="",postAddress="" where id=$shareId;
+//EOF;
+        $sql=<<<EOF
+delete from share where id=$shareId;
+delete from sharePhoto where shareId=$shareId;
+delete from shareTag where shareId=$shareId;
+delete from thumb where shareId=$shareId;
+delete from shareComment where replyShareId=$shareId;
 EOF;
+
         $ret = $this->db->exec($sql);
-        if (!$ret) {
-            return "fail";
+        if ($ret) {
+            $result->setResult("success");
         } else {
-            return "success";
+            $result->setResult("fail");
         }
+        return $result;
     }
 
     public function selectShareDataByShareId($shareId)

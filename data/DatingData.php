@@ -7,6 +7,7 @@
  */
 require_once("connect.php");
 require_once(dirname(__FILE__) . '/../entity/Dating.php');
+require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
 
 class DatingData
 {
@@ -188,17 +189,19 @@ EOF;
 
     public function deleteDating($datingId)
     {
+        $result=new ResultMessage();
         $sql = <<<EOF
       DELETE from dating where id=$datingId;
       DELETE from datingPhoto where datingId=$datingId;
       DELETE from datingTag where datingId=$datingId;
 EOF;
         $ret = $this->db->exec($sql);
-        if (!$ret) {
-            return "fail";
+        if ($ret) {
+            $result->setResult("success");
         } else {
-            return "success";
+            $result->setResult("fail");
         }
+        return $result;
     }
 
     public function selectDatingDataByUserId($userId)

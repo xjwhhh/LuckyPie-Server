@@ -58,6 +58,11 @@ class albumHandler extends SimpleHandler
 
     public function deleteAlbum()
     {
+        if (isset($_POST['albumId'])) {
+            $albumId = $_POST['albumId'];
+        }
+        $result=$this->albumData->deleteAlbumData($albumId);
+        echo json_encode($result);
 
     }
 

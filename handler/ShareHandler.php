@@ -47,7 +47,6 @@ class shareHandler extends SimpleHandler
         if (isset($_POST['userId'])) {
             $userId = $_POST['userId'];
         }
-        //todo groupName
         $groupName = "全部";
         $result = $this->shareData->selectFollowingSharesByUserId($userId, $groupName);
         echo json_encode($result);
@@ -120,6 +119,7 @@ class shareHandler extends SimpleHandler
             $shareId = $_POST['shareId'];
         }
         $result = $this->shareData->deleteShareData($shareId);
+        echo json_encode($result);
 
     }
 

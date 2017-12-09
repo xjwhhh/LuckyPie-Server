@@ -8,6 +8,8 @@
 
 require_once("connect.php");
 require_once(dirname(__FILE__) . '/../entity/Album.php');
+require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
+
 
 class AlbumData
 {
@@ -223,17 +225,19 @@ EOF;
 
     public function deleteAlbumData($albumId)
     {
+        $result=new ResultMessage();
         $sql = <<<EOF
       DELETE from album where id=$albumId;
       DELETE from albumPhoto where albumId=$albumId;
       DELETE from albumTag where albumId=$albumId;
 EOF;
         $ret = $this->db->exec($sql);
-        if (!$ret) {
-            return "fail";
+        if ($ret) {
+            $result->setResult("success");
         } else {
-            return "success";
+            $result->setResult("fail");
         }
+        return $result;
     }
 
 
