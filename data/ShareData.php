@@ -221,12 +221,12 @@ EOF;
             $share->setForwardShareId($row['forwardShareId']);
             $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
-
         }
+
         return $shareArray;
     }
 
-    public function selectHotShares()
+    public function selectHotShares($userId)
     {
         $shareIdArray = array();
         $timeLimit = date("Y-m-d H:i:s", strtotime("-1 day"));
@@ -259,6 +259,17 @@ EOF;
             $share = $this->selectShareDataByShareId($shareId);
             array_push($shareArray, $share);
 
+        }
+        foreach ($shareArray as $share) {
+            $shareId = $share->getId();
+            $sql = <<<EOF
+select * from thumb where userId=$userId and shareId=$shareId;
+EOF;
+            $res = $this->db->query($sql);
+            $share->setThumb(0);
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $share->setThumb(1);
+            }
         }
         return $shareArray;
     }
@@ -319,7 +330,6 @@ EOF;
             $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
         }
-//        print_r($shareArray);
         return $shareArray;
     }
 
@@ -327,9 +337,6 @@ EOF;
     {
         //获取分组关注
         $followIdArray = array();
-//        $sql = <<<EOF
-//      SELECT f.followId from follow f,followGroup fg where fg.userId=$userId and fg.groupName=$groupName and f.gruopId=fg.groupId;
-//EOF;
         $sql = <<<EOF
 select followId from follow where followerId=$userId;
 EOF;
@@ -338,7 +345,6 @@ EOF;
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             array_push($followIdArray, $row['followId']);
         }
-//        print_r($followIdArray);
         $followIdArray = array_unique($followIdArray);
         //获取关注用户的分享
         $shareArray = array();
@@ -346,7 +352,6 @@ EOF;
             $result = $this->selectSharesDataByUserId($followId);
             $shareArray = array_merge_recursive($shareArray, $result);
         }
-//        print_r($shareArray);
         foreach ($shareArray as $share) {
             $shareId = $share->getId();
             $sql = <<<EOF
@@ -442,13 +447,14 @@ EOF;
         return $share;
     }
 
-    public function selectShareBySearch($content){
-        $content=urldecode($content);
+    public function selectShareBySearch($content)
+    {
+        $content = urldecode($content);
 
-        $content="%".$content."%";
-        $content="'".$content."'";
-        $shareArray=array();
-        $sql=<<<EOF
+        $content = "%" . $content . "%";
+        $content = "'" . $content . "'";
+        $shareArray = array();
+        $sql = <<<EOF
 select * from share where description like $content;
 EOF;
 
@@ -461,8 +467,8 @@ EOF;
             $share->setPostTime($row['postTime']);
             $share->setPostAddress($row['postAddress']);
             $share->setForwardShareId($row['forwardShareId']);
-            $share=$this->getShareImagesAndTags($share);
-            array_push($shareArray,$share);
+            $share = $this->getShareImagesAndTags($share);
+            array_push($shareArray, $share);
         }
 
         return $shareArray;

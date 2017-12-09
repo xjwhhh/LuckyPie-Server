@@ -277,17 +277,13 @@ EOF;
     }
 
     public function setIsReadTrue($noticeIdArray){
-//        $isArray=strpos($noticeIdArray,",");
-//        echo $isArray;
         $noticeIdArray=explode(',',$noticeIdArray);
-//        foreach ($noticeIdArray as $noticeId){
-//            $sql=<<<EOF
-//update notice set isRead=1 where id=$noticeId;
-//EOF;
-//            $res=$this->db->exec($sql);
-////            echo $noticeId;
-//        }
-//        return
+        foreach ($noticeIdArray as $noticeId){
+            $sql=<<<EOF
+update notice set isRead=1 where id=$noticeId;
+EOF;
+            $res=$this->db->exec($sql);
+        }
         $result=new ResultMessage();
         $result->setResult("success");
         return $result;

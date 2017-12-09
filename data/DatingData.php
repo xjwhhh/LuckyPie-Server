@@ -60,11 +60,11 @@ EOF;
         $photoArray = $dating->getImageUrls();
         $tagArray = $dating->getTags();
 
-//        echo $photoTime;
 
 
         $description = "'" . $description . "'";
         $postTime = "'" . $postTime . "'";
+        $photoTime="'".$photoTime."'";
         $cost = "'" . $cost . "'";
         $photoAddress = "'" . $photoAddress . "'";
         $postAddress = "'" . $postAddress . "'";
@@ -91,7 +91,6 @@ EOF;
                 $returnDating->setPostAddress($row['postAddress']);
             }
         }
-//        echo $returnDating->getPhotoTime();
 
         $datingId = $returnDating->getId();
 

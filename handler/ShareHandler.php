@@ -33,7 +33,10 @@ class shareHandler extends SimpleHandler
 
     public function getHotShares()
     {
-        $result = $this->shareData->selectHotShares();
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        $result = $this->shareData->selectHotShares($userId);
         echo json_encode($result);
 
     }
