@@ -20,6 +20,11 @@ class ShareData
 
     //对share的操作涉及五个表,share,sharePhoto,shareTag,comment,thumb
 
+    /**
+     * @param $share
+     * @return Share
+     * 插入分享信息
+     */
     public function insertShareData($share)
     {
         $returnShare = new Share();
@@ -145,13 +150,15 @@ EOF;
 
     }
 
+    /**
+     * @param $shareId
+     * @return ResultMessage
+     * 根据分享id删除分享信息
+     */
     public function deleteShareData($shareId)
     {
-        $result=new ResultMessage();
-//        $sql = <<<EOF
-//update share set userId=-1,description="",postAddress="" where id=$shareId;
-//EOF;
-        $sql=<<<EOF
+        $result = new ResultMessage();
+        $sql = <<<EOF
 delete from share where id=$shareId;
 delete from sharePhoto where shareId=$shareId;
 delete from shareTag where shareId=$shareId;
@@ -168,6 +175,11 @@ EOF;
         return $result;
     }
 
+    /**
+     * @param $shareId
+     * @return mixed|Share
+     * 根据分享id获取分享数据
+     */
     public function selectShareDataByShareId($shareId)
     {
         $share = new Share();
@@ -183,12 +195,15 @@ EOF;
             $share->setPostAddress($row['postAddress']);
             $share->setForwardShareId($row['forwardShareId']);
             $share = $this->getShareImagesAndTags($share);
-
         }
         return $share;
-
     }
 
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取分享信息
+     */
     public function selectSharesDataByUserId($userId)
     {
         $shareArray = array();
@@ -206,11 +221,15 @@ EOF;
             $share->setForwardShareId($row['forwardShareId']);
             $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
-
         }
         return $shareArray;
     }
 
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取有限的（6）分享信息，用于在探索摄影师和模特页面来显示用户的以往分享
+     */
     public function selectLimitSharesDataByUserId($userId)
     {
         $shareArray = array();
@@ -229,10 +248,14 @@ EOF;
             $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
         }
-
         return $shareArray;
     }
 
+    /**
+     * @param $userId
+     * @return array
+     * 获取热门分享
+     */
     public function selectHotShares($userId)
     {
         $shareIdArray = array();
@@ -281,6 +304,10 @@ EOF;
         return $shareArray;
     }
 
+    /**
+     * @return array
+     * 获取每个标签对应的图片作为标签背景
+     */
     public function getAllTags()
     {
         $sql = <<<EOF
@@ -315,6 +342,11 @@ EOF;
         return $imageArray;
     }
 
+    /**
+     * @param $tagName
+     * @return array
+     * 根据标签获取分享信息
+     */
     public function selectExploreSharesByTag($tagName)
     {
         $tagName = "'" . $tagName . "'";
@@ -340,6 +372,12 @@ EOF;
         return $shareArray;
     }
 
+    /**
+     * @param $userId
+     * @param $groupName
+     * @return array
+     * 根据用户id获取用户所关注的用户的分享信息
+     */
     public function selectFollowingSharesByUserId($userId, $groupName)
     {
         //获取分组关注
@@ -376,6 +414,11 @@ EOF;
     }
 
 
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取用户点赞过的分享信息
+     */
     public function getUserLikes($userId)
     {
         $shareIdArray = Array();
@@ -428,6 +471,11 @@ EOF;
         return $shareArray;
     }
 
+    /**
+     * @param $share
+     * @return mixed
+     * 根据分享基本信息获取分享图片和标签信息
+     */
     private function getShareImagesAndTags($share)
     {
         $shareId = $share->getId();
@@ -454,6 +502,11 @@ EOF;
         return $share;
     }
 
+    /**
+     * @param $content
+     * @return array
+     * 根据搜索内容获取分享信息
+     */
     public function selectShareBySearch($content)
     {
         $content = urldecode($content);
@@ -464,7 +517,6 @@ EOF;
         $sql = <<<EOF
 select * from share where description like $content;
 EOF;
-
         $res = $this->db->query($sql);
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             $share = new Share();
@@ -477,10 +529,6 @@ EOF;
             $share = $this->getShareImagesAndTags($share);
             array_push($shareArray, $share);
         }
-
         return $shareArray;
-
     }
-
-
 }

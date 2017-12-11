@@ -69,6 +69,7 @@ RewriteRule ^api/get/follower/([0-9]+)$ controller/UserController.php?option=get
 RewriteRule ^api/post/share/doThumb$ controller/NoticeController.php?option=doShareThumb [nc,qsa]
 RewriteRule ^api/post/share/cancelThumb$ controller/NoticeController.php?option=cancelShareThumb [nc,qsa]
 
+RewriteRule ^api/post/share/doAt$ controller/NoticeController.php?option=doShareAt [nc,qsa]
 
 RewriteRule ^api/post/share/doComment$ controller/NoticeController.php?option=doShareComment [nc,qsa]
 RewriteRule ^api/post/share/comment$ controller/NoticeController.php?option=getShareComment [nc,qsa]

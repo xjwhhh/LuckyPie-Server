@@ -6,6 +6,7 @@
  * Time: 18:32
  */
 require_once("connect.php");
+require_once("Util.php");
 require_once(dirname(__FILE__) . '/../entity/Dating.php');
 require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
 
@@ -13,16 +14,24 @@ class DatingData
 {
     private $db;
 
+    private $util;
+
     function __construct()
     {
         $this->db = new MyDB();
+        $this->util = new Util();
     }
 
     //对dating的操作涉及三个表,dating,datingPhoto,datingTag
 
-    private function getDatingImagesAndTags($dating){
-//        echo "ety";
-        $datingId=$dating->getId();
+    /**
+     * @param $dating
+     * @return mixed
+     * 根据约拍基本信息获取约拍图片和标签信息
+     */
+    private function getDatingImagesAndTags($dating)
+    {
+        $datingId = $dating->getId();
         //获取photo
         $photoArray = array();
         $photoSql = <<<EOF
@@ -42,11 +51,15 @@ EOF;
         while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
             array_push($tagArray, $tagRow['type']);
         }
-//        print_r($tagArray);
         $dating->setTags($tagArray);
         return $dating;
     }
 
+    /**
+     * @param $dating
+     * @return Dating
+     * 插入约拍信息
+     */
     public function insertDating($dating)
     {
 
@@ -61,11 +74,9 @@ EOF;
         $photoArray = $dating->getImageUrls();
         $tagArray = $dating->getTags();
 
-
-
         $description = "'" . $description . "'";
         $postTime = "'" . $postTime . "'";
-        $photoTime="'".$photoTime."'";
+        $photoTime = "'" . $photoTime . "'";
         $cost = "'" . $cost . "'";
         $photoAddress = "'" . $photoAddress . "'";
         $postAddress = "'" . $postAddress . "'";
@@ -163,7 +174,6 @@ EOF;
             while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
                 $tagId = $tagRow['id'];
             }
-//            echo $tagId;
             $datingTagSql = <<<EOF
 insert into datingTag values ($datingId,$tagId);
 EOF;
@@ -173,13 +183,8 @@ EOF;
             }
 
         }
-
         $returnDating->setTags($tagArray);
-//        $returnDating=$this->getDatingImagesAndTags($returnDating);
-
         return $returnDating;
-
-
     }
 
     public function updateDating()
@@ -187,9 +192,14 @@ EOF;
 
     }
 
+    /**
+     * @param $datingId
+     * @return ResultMessage
+     * 根据约拍id删除约拍信息
+     */
     public function deleteDating($datingId)
     {
-        $result=new ResultMessage();
+        $result = new ResultMessage();
         $sql = <<<EOF
       DELETE from dating where id=$datingId;
       DELETE from datingPhoto where datingId=$datingId;
@@ -204,6 +214,11 @@ EOF;
         return $result;
     }
 
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取该用户的约拍信息
+     */
     public function selectDatingDataByUserId($userId)
     {
         $datingArray = array();
@@ -222,41 +237,21 @@ EOF;
             $dating->setPhotoAddress($row['photoAddress']);
             $dating->setPostAddress($row['postAddress']);
 
-//            $datingId=$dating->getId();
-//            //获取photo
-//            $photoArray = array();
-//            $photoSql = <<<EOF
-//      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
-//EOF;
-//            $photoRes = $this->db->query($photoSql);
-//            while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
-//                array_push($photoArray, $photoRow['url']);
-//            }
-//            $dating->setImageUrls($photoArray);
-//            //获取tag
-//            $tagArray = array();
-//            $tagSql = <<<EOF
-//      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
-//EOF;
-//            $tagRes = $this->db->query($tagSql);
-//            while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-//                array_push($tagArray, $tagRow['type']);
-//            }
-//            $dating->setTags($tagArray);
-            $dating=$this->getDatingImagesAndTags($dating);
-
+            $dating = $this->getDatingImagesAndTags($dating);
             array_push($datingArray, $dating);
         }
         return $datingArray;
-
     }
 
-    //可能不需要
-    public function selectHotDating()
-    {
 
-    }
-
+    /**
+     * @param $address
+     * @param $cost
+     * @param $identity
+     * @param $gender
+     * @return array
+     * 根据条件查询符合的约拍信息
+     */
     public function selectExploreDatingByConditions($address, $cost, $identity, $gender)
     {
         $datingArrayAddress = array();
@@ -281,33 +276,9 @@ EOF;
                 $dating->setPostTime($row['postTime']);
                 $dating->setPhotoAddress($row['photoAddress']);
                 $dating->setPostAddress($row['postAddress']);
-
-                $datingId=$dating->getId();
-                //获取photo
-                $photoArray = array();
-                $photoSql = <<<EOF
-      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
-EOF;
-                $photoRes = $this->db->query($photoSql);
-                while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
-                    array_push($photoArray, $photoRow['url']);
-                }
-                $dating->setImageUrls($photoArray);
-                //获取tag todo 不匹配
-                $tagArray = array();
-                $tagSql = <<<EOF
-      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
-EOF;
-                $tagRes = $this->db->query($tagSql);
-                while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-                    array_push($tagArray, $tagRow['type']);
-                }
-                $dating->setTags($tagArray);
-
                 array_push($datingArrayAddress, $dating);
             }
         } else {
-            $address = "'" . $address . "'";
             $sql = <<<EOF
 select * from dating;
 EOF;
@@ -322,29 +293,6 @@ EOF;
                 $dating->setPostTime($row['postTime']);
                 $dating->setPhotoAddress($row['photoAddress']);
                 $dating->setPostAddress($row['postAddress']);
-
-                $datingId=$dating->getId();
-                //获取photo
-                $photoArray = array();
-                $photoSql = <<<EOF
-      SELECT photo.url from datingPhoto,photo where datingPhoto.datingId=$datingId and photo.id=datingPhoto.photoId;
-EOF;
-                $photoRes = $this->db->query($photoSql);
-                while ($photoRow = $photoRes->fetchArray(SQLITE3_ASSOC)) {
-                    array_push($photoArray, $photoRow['url']);
-                }
-                $dating->setImageUrls($photoArray);
-                //获取tag todo 不匹配
-                $tagArray = array();
-                $tagSql = <<<EOF
-      SELECT tag.type from datingTag,tag where datingTag.datingId=$datingId and tag.id=datingTag.tagId;
-EOF;
-                $tagRes = $this->db->query($tagSql);
-                while ($tagRow = $tagRes->fetchArray(SQLITE3_ASSOC)) {
-                    array_push($tagArray, $tagRow['type']);
-                }
-                $dating->setTags($tagArray);
-
                 array_push($datingArrayAddress, $dating);
             }
         }
@@ -394,10 +342,21 @@ EOF;
             $datingArrayGender = $datingArrayIdentity;
         }
 
-        return $datingArrayGender;
+        $returnDatingArray = array();
+        foreach ($datingArrayGender as $dating) {
+            $dating = $this->getDatingImagesAndTags($dating);
+            array_push($returnDatingArray, $dating);
+        }
+        return $returnDatingArray;
     }
 
 
+    /**
+     * @param $userId
+     * @param $groupName
+     * @return array
+     * 根据用户id和关注分组获取该用户所关注的用户的约拍信息
+     */
     public function selectFollowingDatingByUserId($userId, $groupName)
     {
         //获取分组关注
@@ -417,16 +376,19 @@ EOF;
         }
         return $shareArray;
         //todo 按时间排序
-
-
     }
 
+    /**
+     * @param $content
+     * @return array
+     * 根据搜索条件获取符合的约拍信息
+     */
     public function selectDatingBySearch($content)
     {
-        $content=urldecode($content);
+        $content = urldecode($content);
 
-        $content="%".$content."%";
-        $content="'".$content."'";
+        $content = "%" . $content . "%";
+        $content = "'" . $content . "'";
         $datingArray = array();
         $sql = <<<EOF
 select * from dating where description like $content;
@@ -445,12 +407,7 @@ EOF;
             $dating->setPostAddress($row['postAddress']);
             $dating = $this->getDatingImagesAndTags($dating);
             array_push($datingArray, $dating);
-
         }
-
         return $datingArray;
     }
-
-
-
 }

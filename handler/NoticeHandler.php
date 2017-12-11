@@ -90,6 +90,21 @@ class noticeHandler extends SimpleHandler{
         $result = $this->noticeData->cancelShareThumb($startUserId,$userId, $shareId);
     }
 
+    public function doShareAt()
+    {
+        if (isset($_POST['startUserId'])) {
+            $startUserId = $_POST['startUserId'];
+        }
+        if (isset($_POST['userId'])) {
+            $userId = $_POST['userId'];
+        }
+        if (isset($_POST['shareId'])) {
+            $shareId = $_POST['shareId'];
+        }
+
+        $result = $this->noticeData->insertShareAt($startUserId,$userId, $shareId);
+    }
+
     public function addShareComment(){
         if (isset($_POST['startUserId'])) {
             $startUserId=$_POST['startUserId'];

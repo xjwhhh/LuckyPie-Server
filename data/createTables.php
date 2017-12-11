@@ -445,3 +445,20 @@ if (!$db) {
 //    echo "Records created successfully\n";
 //}
 //$db->close();
+
+////create table shareAt
+//$sql= <<<EOF
+//      CREATE TABLE shareAt
+//      (userId int not null,
+//      shareId int not null,
+//      startUserId int not null
+//      );
+//EOF;
+//
+//$ret = $db->exec($sql);
+//if (!$ret) {
+//    echo $db->lastErrorMsg();
+//} else {
+//    echo "Records created successfully\n";
+//}
+//$db->close();

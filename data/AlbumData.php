@@ -7,6 +7,7 @@
  */
 
 require_once("connect.php");
+require_once("Util.php");
 require_once(dirname(__FILE__) . '/../entity/Album.php');
 require_once(dirname(__FILE__) . '/../entity/ResultMessage.php');
 
@@ -15,17 +16,24 @@ class AlbumData
 {
     private $db;
 
+    private $util;
+
     function __construct()
     {
         $this->db = new MyDB();
+        $this->util = new Util();
     }
 
     //对album的操作涉及三个表,album,albumPhoto,albumTag
 
+    /**
+     * @param $album
+     * @return mixed
+     * 根据相册的基本信息获取相册的图片和标签并返回
+     */
     private function getAlbumImagesAndTags($album)
     {
         $albumId = $album->getId();
-//        echo $albumId;
         //获取photo
         $photoArray = array();
         $photoSql = <<<EOF
@@ -49,6 +57,11 @@ EOF;
         return $album;
     }
 
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取用户的相册信息
+     */
     public function getUserAlbumByUserId($userId)
     {
         $albumArray = array();
@@ -56,7 +69,6 @@ EOF;
       SELECT * from album where userId=$userId;
 EOF;
         $res = $this->db->query($sql);
-        $albumId = -1;
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             $album = new Album();
             $album->setId($row['id']);
@@ -67,6 +79,7 @@ EOF;
             $album->setUpdateTime($row['updateTime']);
 
             $albumId = $album->getId();
+
             //获取photo
             $photoArray = array();
             $photoSql = <<<EOF
@@ -93,6 +106,11 @@ EOF;
     }
 
 
+    /**
+     * @param $album
+     * @return Album
+     * 插入相册信息
+     */
     public function insertAlbumData($album)
     {
         $returnAlbum = new Album();
@@ -109,7 +127,6 @@ EOF;
         $description = "'" . $description . "'";
         $createTime = "'" . $createTime . "'";
         $updateTime = "'" . $updateTime . "'";
-
 
         //插入album
         $sql = <<<EOF
@@ -211,7 +228,6 @@ EOF;
             if (!$albumTagRes) {
                 return new Album();
             }
-
         }
         $returnAlbum->setTags($tagArray);
         return $returnAlbum;
@@ -223,9 +239,14 @@ EOF;
 
     }
 
+    /**
+     * @param $albumId
+     * @return ResultMessage
+     * 根据相册id删除相册相关数据
+     */
     public function deleteAlbumData($albumId)
     {
-        $result=new ResultMessage();
+        $result = new ResultMessage();
         $sql = <<<EOF
       DELETE from album where id=$albumId;
       DELETE from albumPhoto where albumId=$albumId;
@@ -241,6 +262,11 @@ EOF;
     }
 
 
+    /**
+     * @param $albumId
+     * @return Album|mixed
+     * 根据相册id获取相册信息
+     */
     public function selectAlbumByAlbumId($albumId)
     {
         $album = new Album();
@@ -257,23 +283,23 @@ EOF;
             $album->setUpdateTime($row['updateTime']);
             $album = $this->getAlbumImagesAndTags($album);
         }
-
         return $album;
-
-
     }
 
+    /**
+     * @param $content
+     * @return array
+     * 根据搜索条件获取相册信息
+     */
     public function selectAlbumBySearch($content)
     {
-        $content=urldecode($content);
-
-        $content="%".$content."%";
-        $content="'".$content."'";
+        $content = urldecode($content);
+        $content = "%" . $content . "%";
+        $content = "'" . $content . "'";
         $albumArray = array();
         $sql = <<<EOF
 select * from album where description like $content;
 EOF;
-
         $res = $this->db->query($sql);
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             $album = new Album();
@@ -283,13 +309,9 @@ EOF;
             $album->setDesc($row['description']);
             $album->setCreateTime($row['createTime']);
             $album->setUpdateTime($row['updateTime']);
-            $album=$this->getAlbumImagesAndTags($album);
-            array_push($albumArray,$album);
-
+            $album = $this->getAlbumImagesAndTags($album);
+            array_push($albumArray, $album);
         }
-
         return $albumArray;
     }
-
-
 }

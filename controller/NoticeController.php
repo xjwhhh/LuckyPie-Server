@@ -49,6 +49,10 @@ switch ($option) {
         $noticeHandler->cancelShareThumb();
         break;
 
+    case "doShareAt":
+        $noticeHandler->doShareAt();
+        break;
+
     case "getShareComment":
         $noticeHandler->getShareComment();
         break;

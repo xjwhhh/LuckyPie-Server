@@ -20,6 +20,12 @@ class UserData
         $this->db = new MyDB();
     }
 
+    /**
+     * @param $account
+     * @param $password
+     * @return User
+     * 插入用户信息
+     */
     public function insertUserData($account, $password)
     {
         $account = "'" . $account . "'";
@@ -38,8 +44,8 @@ EOF;
         if ($count == 0) {
             //插入
             $authority = 0;
-            $headUrl="http://localhost/LuckyPie-Server/photo/default/head.png";
-            $headUrl="'".$headUrl."'";
+            $headUrl = "http://localhost/LuckyPie-Server/photo/default/head.png";
+            $headUrl = "'" . $headUrl . "'";
             $sql = <<<EOF
       INSERT INTO USER (account,password,name,authority,head)
       VALUES ($account,$password,"乐拍成员",$authority,$headUrl);
@@ -64,6 +70,11 @@ EOF;
         return $user;
     }
 
+    /**
+     * @param $id
+     * @return User
+     * 根据用户id获取用户信息
+     */
     public function selectUserDataById($id)
     {
         $sql = <<<EOF
@@ -95,6 +106,12 @@ EOF;
         return $user;
     }
 
+    /**
+     * @param $account
+     * @param $password
+     * @return User
+     * 根据账号密码获取用户信息
+     */
     public function selectUserData($account, $password)
     {
         $sql = <<<EOF
@@ -126,9 +143,15 @@ EOF;
         return $user;
     }
 
-    public function updateUserHead($userId,$headInfo)
+    /**
+     * @param $userId
+     * @param $headInfo
+     * @return ResultMessage
+     * 更新用户头像图片
+     */
+    public function updateUserHead($userId, $headInfo)
     {
-        $resultMessage=new ResultMessage();
+        $resultMessage = new ResultMessage();
         $photoId = 0;
         //不查看照片是否已经上传过
         //上传至服务器
@@ -156,14 +179,23 @@ EOF;
         if ($headRes) {
             $resultMessage->setResult("success");
         } else {
-           $resultMessage->setResult("fail");
+            $resultMessage->setResult("fail");
 
         }
         return $resultMessage;
-
     }
 
-    //todo 如何知道要更新的是哪些内容->全部更新
+    /**
+     * @param $userId
+     * @param $name
+     * @param $introduction
+     * @param $gender
+     * @param $identity
+     * @param $telephone
+     * @param $email
+     * @return User
+     * 更新用户基本信息
+     */
     public function updateUserBasicInfo($userId, $name, $introduction, $gender, $identity, $telephone, $email)
     {
         $user = new User();
@@ -214,11 +246,15 @@ EOF;
         }
     }
 
+    /**
+     * @return array
+     * 获取热门摄影师，点赞最多的一千个摄影师，随机选一百个展现
+     */
     public function selectHotPhotographer()
     {
         $userArray = array();
 
-        //todo 点赞最多的一千个摄影师，随机选一百个展现
+        //todo
 //        $sql = <<<EOF
 //      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
 //       from user,thumb
@@ -260,6 +296,10 @@ EOF;
 
     }
 
+    /**
+     * @return array
+     * 获取最受关注的摄影师信息，被点赞数最高的100个摄影师
+     */
     public function selectBestPhotographer()
     {
         $userArray = array();
@@ -269,7 +309,7 @@ EOF;
        from user,thumb 
        where identity="摄影师" and user.id=thumb.thumbUserId
        group by user.id
-       order by num
+       order by num ASC
        limit 100
        ;
 EOF;
@@ -300,6 +340,10 @@ EOF;
         return $userArray;
     }
 
+    /**
+     * @return array
+     * 获取最新摄影师信息
+     */
     public function selectNewPhotographer()
     {
         $userArray = array();
@@ -339,6 +383,10 @@ EOF;
         return $userArray;
     }
 
+    /**
+     * @return array
+     * 获取热门模特的信息，点赞最多的一千个模特，随机选一百个展现
+     */
     public function selectHotModel()
     {
         $userArray = array();
@@ -383,6 +431,10 @@ EOF;
         return $userArray;
     }
 
+    /**
+     * @return array
+     * 获取最受关注的模特信息，被点赞数最多的一百个模特
+     */
     public function selectBestModel()
     {
         $userArray = array();
@@ -423,6 +475,10 @@ EOF;
         return $userArray;
     }
 
+    /**
+     * @return array
+     * 获取最新模特的信息
+     */
     public function selectNewModel()
     {
         $userArray = array();
@@ -462,43 +518,61 @@ EOF;
         return $userArray;
     }
 
+    /**
+     * @param $followId
+     * @param $followerId
+     * @return ResultMessage
+     * 用户关注
+     */
     public function follow($followId, $followerId)
     {
-        $resultMessage=new ResultMessage();
+        $resultMessage = new ResultMessage();
         $sql = <<<EOF
 insert into follow(followId,followerId,groupId) values($followId,$followerId,-1);
 EOF;
         $ret = $this->db->exec($sql);
-        if($ret){
+        if ($ret) {
             $resultMessage->setResult("success");
 
-        }else{
+        } else {
             $resultMessage->setResult("fail");
         }
         return $resultMessage;
     }
 
-    public function removeFollow($followId,$followerId){
-        $resultMessage=new ResultMessage();
-        $sql=<<<EOF
+    /**
+     * @param $followId
+     * @param $followerId
+     * @return ResultMessage
+     * 用户取消关注
+     */
+    public function removeFollow($followId, $followerId)
+    {
+        $resultMessage = new ResultMessage();
+        $sql = <<<EOF
 update follow set followId=-1 and followerId=-1 where followId=$followId and followerId=$followerId;
 EOF;
         $ret = $this->db->exec($sql);
-        if($ret){
+        if ($ret) {
             $resultMessage->setResult("success");
 
-        }else{
+        } else {
             $resultMessage->setResult("fail");
         }
         return $resultMessage;
-
-
     }
 
-    public function isFollow($userId,$checkUserId){
-        $resultMessage=new ResultMessage();
+    /**
+     * @param $userId
+     * @param $checkUserId
+     * @return ResultMessage
+     * 查看用户是否关注了某个用户
+     */
+    public function isFollow($userId, $checkUserId)
+    {
+        $resultMessage = new ResultMessage();
         $resultMessage->setResult("fail");
-        $sql=<<<EOF
+        $sql = <<<EOF
 select * from follow where followerId=$userId and followId=$checkUserId;
 EOF;
         $ret = $this->db->query($sql);
@@ -508,40 +582,58 @@ EOF;
         return $resultMessage;
     }
 
-    public function getFollow($userId){
-        $followIdArray=array();
-        $sql=<<<EOF
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取关注列表
+     */
+    public function getFollow($userId)
+    {
+        $followIdArray = array();
+        $sql = <<<EOF
 select followId from follow where followerId=$userId;
 EOF;
         $ret = $this->db->query($sql);
         while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-           array_push($followIdArray,$row['followId']);
+            array_push($followIdArray, $row['followId']);
         }
-        $followIdArray=array_unique($followIdArray);
+        $followIdArray = array_unique($followIdArray);
         return $followIdArray;
     }
 
-    public function getFollower($userId){
-        $followerIdArray=array();
-        $sql=<<<EOF
+    /**
+     * @param $userId
+     * @return array
+     * 根据用户id获取粉丝列表
+     */
+    public function getFollower($userId)
+    {
+        $followerIdArray = array();
+        $sql = <<<EOF
 select followerId from follow where followId=$userId;
 EOF;
         $ret = $this->db->query($sql);
         while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
-            array_push($followerIdArray,$row['followerId']);
+            array_push($followerIdArray, $row['followerId']);
         }
-        $followerIdArray=array_unique($followerIdArray);
+        $followerIdArray = array_unique($followerIdArray);
         return $followerIdArray;
     }
 
-    public function selectUserBySearch($content){
+    /**
+     * @param $content
+     * @return array
+     * 根据搜索条件获取用户信息
+     */
+    public function selectUserBySearch($content)
+    {
 
-        $content=urldecode($content);
+        $content = urldecode($content);
 
-        $content="%".$content."%";
-        $content="'".$content."'";
-        $userArray=array();
-        $sql=<<<EOF
+        $content = "%" . $content . "%";
+        $content = "'" . $content . "'";
+        $userArray = array();
+        $sql = <<<EOF
 select * from user where name like $content or introduction like $content;
 EOF;
 
@@ -571,8 +663,6 @@ EOF;
         }
         return $userArray;
     }
-
-
 }
 
 
