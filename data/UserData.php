@@ -255,18 +255,18 @@ EOF;
         $userArray = array();
 
         //todo
-//        $sql = <<<EOF
-//      SELECT user.id,user.account,user.password,user.authority,user.name,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
-//       from user,thumb
-//       where identity="摄影师" and user.id=thumb.userId
-//       group by user.id
-//       order by num
-//       limit 1000
-//       ;
-//EOF;
         $sql = <<<EOF
-select * from user where IDENTITY ="摄影师";
+      SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
+       from user,thumb 
+       where identity="摄影师" and user.id=thumb.thumbUserId
+       group by user.id
+       order by num 
+       limit 100
+       ;
 EOF;
+//        $sql = <<<EOF
+//select * from user where IDENTITY ="摄影师";
+//EOF;
 
         $ret = $this->db->query($sql);
         while ($row = $ret->fetchArray(SQLITE3_ASSOC)) {
@@ -309,7 +309,7 @@ EOF;
        from user,thumb 
        where identity="摄影师" and user.id=thumb.thumbUserId
        group by user.id
-       order by num ASC
+       order by num 
        limit 100
        ;
 EOF;
@@ -393,10 +393,10 @@ EOF;
         //todo 点赞最多的一千个模特，随机选一百个展现
         $sql = <<<EOF
       SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
-       from user,thumb
-       where identity="模特" and user.id=thumb.userId
+       from user,thumb 
+       where identity="模特" and user.id=thumb.thumbUserId
        group by user.id
-       order by num
+       order by num 
        limit 1000
        ;
 EOF;
@@ -442,9 +442,9 @@ EOF;
         $sql = <<<EOF
       SELECT user.id,user.account,user.password,user.authority,user.name,user.head,user.identity,user.introduction,user.gender,user.telephone,user.email,count(*) num
        from user,thumb 
-       where identity="模特" and user.id=thumb.userId
+       where identity="模特" and user.id=thumb.thumbUserId
        group by user.id
-       order by num
+       order by num 
        limit 100
        ;
 EOF;
